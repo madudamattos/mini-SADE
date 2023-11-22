@@ -3,13 +3,13 @@
 #include "tEncaminhamento.h"
 
 struct tEncaminhamento{
-    char *nomePaciente;
-    char *CPF;
-    char *nomeEspecialidade;
-    char *motivo;
-    char *nomeMedico;
-    char *CRM;
-    char *dataStr;
+    char nomePaciente[100];
+    char CPF[15];
+    char nomeEspecialidade[50];
+    char motivo[300];
+    char nomeMedico[100];
+    char CRM[11];
+    char dataStr[13];
 };
 
 tEncaminhamento *criaEncaminhamento(char *nomePaciente, char* CPF, 
@@ -17,13 +17,13 @@ tEncaminhamento *criaEncaminhamento(char *nomePaciente, char* CPF,
     
     tEncaminhamento *e = (tEncaminhamento *)calloc(1, sizeof(tEncaminhamento));
 
-    e->nomePaciente = nomePaciente;
-    e->CPF = CPF;
-    e->nomeEspecialidade = nomeEspecialidade;
-    e->motivo = motivo;
-    e->nomeMedico = nomeMedico;
-    e->CRM = CRM;
-    e->dataStr = dataStr;
+    strncpy(e->nomePaciente, nomePaciente, sizeof(e->nomePaciente) - 1);
+    strncpy(e->CPF, CPF, sizeof(e->CPF) - 1);
+    strncpy(e->nomeEspecialidade, nomeEspecialidade, sizeof(e->nomeEspecialidade) - 1);
+    strncpy(e->motivo, motivo, sizeof(e->motivo) - 1);
+    strncpy(e->nomeMedico, nomeMedico, sizeof(e->nomeMedico) - 1);
+    strncpy(e->CRM, CRM, sizeof(e->CRM) - 1);
+    strncpy(e->dataStr, dataStr, sizeof(e->dataStr) - 1);
 
     return e;
 }
@@ -53,6 +53,24 @@ void imprimeNaTelaEncaminhamento(void *dado){
 
 void imprimeEmArquivoEncaminhamento(void *dado, char *path){
 
-}
+    if(dado != NULL){
+        char *caminhoArquivo[100];
+        FILE *pArquivo = NULL;
 
-#endif
+        sprintf(caminhoArquivo, "%s/%s", path, NOME_ARQUIVO_ENCAMINHAMENTO);
+
+        pArquivo = fopen(caminhoArquivo, "wb");
+    
+        if (pArquivo == NULL) {
+            printf("Não foi possível abrir o arquivo\n");
+            exit(1);
+        }
+
+        tEncaminhamento *encaminhamento = (tEncaminhamento *)dado;
+
+        fwrite(encaminhamento, sizeof(tEncaminhamento), 1, pArquivo);
+        
+        fclose(pArquivo);
+    }
+
+}

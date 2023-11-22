@@ -1,28 +1,18 @@
 #include "tReceita.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-#define MAX_TAM_NOME_MEDICAMENTO 50
-#define MAX_TAM_TIPO_MEDICAMENTO 50
-#define MAX_TAM_INSTRUCOES 300
-#define NOME_ARQUIVO_RECEITA "receita.txt"
-
-typedef enum
-{
-    ORAL,
-    TOPICO
-} eTipoUso;
+#include <string.h>
 
 struct tReceita{
-    char *nomePaciente;
+    char nomePaciente[100];
     eTipoUso tipoUso;
-    char *nomeMedicamento;
-    char *tipoMedicamento;
-    char *instrucoes;
+    char nomeMedicamento[MAX_TAM_NOME_MEDICAMENTO];
+    char tipoMedicamento[MAX_TAM_TIPO_MEDICAMENTO];
+    char instrucoes[MAX_TAM_INSTRUCOES];
     int qntd;
-    char *nomeMedico;
-    char *CRM;
-    char *dataStr;
+    char nomeMedico[100];
+    char CRM[11];
+    char dataStr[13];
 };
 
 
@@ -32,13 +22,16 @@ tReceita *criaReceita(char *nomePaciente, eTipoUso tipoUso, char *nomeMedicament
     
     tReceita *receita = (tReceita *)calloc(1, sizeof(tReceita));
 
-    receita->nomePaciente = nomePaciente;
-    receita->nomeMedicamento = nomeMedicamento;
-    receita->tipoMedicamento = tipoMedicamento;
-    receita->instrucoes = instrucoes;
-    receita->nomeMedico = nomeMedico;
-    receita->CRM = CRM;
-    receita->dataStr = dataStr;
+    strncpy(receita->nomePaciente, nomePaciente, sizeof(receita->nomePaciente) - 1);
+    receita->tipoUso = tipoUso;
+    strncpy(receita->nomeMedicamento, nomeMedicamento, sizeof(receita->nomeMedicamento) - 1);
+    strncpy(receita->tipoMedicamento, tipoMedicamento, sizeof(receita->tipoMedicamento) - 1);
+    strncpy(receita->instrucoes, instrucoes, sizeof(receita->instrucoes) - 1);
+    receita->qntd = qntd;
+    strncpy(receita->nomeMedico, nomeMedico, sizeof(receita->nomeMedico) - 1);
+    strncpy(receita->CRM, CRM, sizeof(receita->CRM) - 1);
+    strncpy(receita->dataStr, dataStr, sizeof(receita->dataStr) - 1);
+
 
     return receita;                    
 }
@@ -76,5 +69,25 @@ void imprimeNaTelaReceita(void *dado){
  * O nome do arquivo e a maneira de escrita é definido dentro da função
  */
 void imprimeEmArquivoReceita(void *dado, char *path){
+    
+    if(dado != NULL){
+        char *caminhoArquivo[100];
+        FILE *pArquivo = NULL;
+
+        sprintf(caminhoArquivo, "%s/%s", path, NOME_ARQUIVO_RECEITA);
+
+        pArquivo = fopen(caminhoArquivo, "wb");
+    
+        if (pArquivo == NULL) {
+            printf("Não foi possível abrir o arquivo\n");
+            exit(1);
+        }
+
+        tReceita *receita = (tReceita *)dado;
+
+        fwrite(receita, sizeof(tReceita), 1, pArquivo);
+        
+        fclose(pArquivo);
+    }
 
 }
