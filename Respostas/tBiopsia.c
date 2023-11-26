@@ -18,6 +18,8 @@ struct tLesao{
     char diagnostico[50];
     char regiao[50];
     int tamanho;
+    int cirurgia;
+    int crioterapia;
 };
 
 tBiopsia *criaBiopsia(char *nomePaciente, char *CPF,
@@ -41,6 +43,20 @@ tBiopsia *criaBiopsia(char *nomePaciente, char *CPF,
         strncpy(biopsia->lesoes[i]->diagnostico, lesoes[i]->diagnostico, 50*sizeof(char));
         strncpy(biopsia->lesoes[i]->regiao, lesoes[i]->regiao, 50*sizeof(char));
         biopsia->lesoes[i]->tamanho = lesoes[i]->tamanho;
+        biopsia->lesoes[i]->cirurgia = lesoes[i]->cirurgia;
+        biopsia->lesoes[i]->crioterapia = lesoes[i]->crioterapia;
+    }
+
+    int flag = -1;
+    for(int i=0; i<biopsia->qntdLesoes; i++){
+        if(biopsia->lesoes[i]->cirurgia == 1){
+            flag = 0;
+        }
+    }
+
+    if(flag == -1){
+        printf("Não há lesões para biópsia\n");
+        return NULL;
     }
 
     return biopsia;
@@ -66,7 +82,7 @@ void desalocaBiopsia(void *dado){
  */
 void imprimeNaTelaBiopsia(void *dado){
     if(dado == NULL){
-        printf("biopsia não encontrada\n");
+        printf("não foi possivel imprimir a biopsia\n");
         exit(1);
     }
 
@@ -76,7 +92,11 @@ void imprimeNaTelaBiopsia(void *dado){
     printf("CPF: %s\n\n", biopsia->CPF);
     printf("SOLICITACAO DE BIOPSIA PARA AS LESOES:\n");
     for(int i=0; i<biopsia->qntdLesoes; i++){
-        printf("%s - %s - %s - %dMM\n\n", biopsia->lesoes[i]->rotulo, biopsia->lesoes[i]->diagnostico, biopsia->lesoes[i]->regiao, biopsia->lesoes[i]->tamanho);
+
+        if(biopsia->lesoes[i]->cirurgia == 1){
+           printf("%s - %s - %s - %dMM\n\n", biopsia->lesoes[i]->rotulo, biopsia->lesoes[i]->diagnostico, biopsia->lesoes[i]->regiao, biopsia->lesoes[i]->tamanho); 
+        }
+        
     }
 
     printf("%s (%s)\n", biopsia->nomeMedico, biopsia->CRM);
@@ -93,6 +113,10 @@ void imprimeNaTelaBiopsia(void *dado){
  * O nome do arquivo e a maneira de escrita é definido dentro da função
  */
 void imprimeEmArquivoBiopsia(void *dado, char *path){
+    if(dado == NULL){
+        printf("não foi possivel imprimir a biopsia em arquivo\n");
+        return;
+    }
 
     if(dado != NULL){
         char caminhoArquivo[100];
