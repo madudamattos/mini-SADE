@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "tBiopsia.h"
 #include "tEncaminhamento.h"
 
 struct tEncaminhamento{
@@ -54,7 +56,7 @@ void imprimeNaTelaEncaminhamento(void *dado){
 void imprimeEmArquivoEncaminhamento(void *dado, char *path){
 
     if(dado != NULL){
-        char *caminhoArquivo[100];
+        char caminhoArquivo[100];
         FILE *pArquivo = NULL;
 
         sprintf(caminhoArquivo, "%s/%s", path, NOME_ARQUIVO_ENCAMINHAMENTO);

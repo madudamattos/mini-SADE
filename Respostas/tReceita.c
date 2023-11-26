@@ -71,7 +71,7 @@ void imprimeNaTelaReceita(void *dado){
 void imprimeEmArquivoReceita(void *dado, char *path){
     
     if(dado != NULL){
-        char *caminhoArquivo[100];
+        char caminhoArquivo[100];
         FILE *pArquivo = NULL;
 
         sprintf(caminhoArquivo, "%s/%s", path, NOME_ARQUIVO_RECEITA);

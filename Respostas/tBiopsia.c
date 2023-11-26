@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "tBiopsia.h"
 
 struct tBiopsia{
@@ -30,16 +31,16 @@ tBiopsia *criaBiopsia(char *nomePaciente, char *CPF,
     strncpy(biopsia->nomeMedico, nomeMedico, sizeof(biopsia->nomeMedico) - 1);
     strncpy(biopsia->CRM, CRM, sizeof(biopsia->CRM) - 1);
     strncpy(biopsia->dataStr, dataStr, sizeof(biopsia->dataStr) - 1);
-    strncpy(biopsia->qntdLesoes, qntdLesoes, sizeof(int));
     
+    biopsia->qntdLesoes = qntdLesoes;
     biopsia->lesoes = (tLesao **)calloc(qntdLesoes, sizeof(tLesao *));
 
     for(int i=0; i<biopsia->qntdLesoes; i++){
         biopsia->lesoes[i] = (tLesao *)calloc(1, sizeof(tLesao));
-        strncpy(biopsia->lesoes[i]->rotulo, lesoes[i]->rotulo, sizeof(biopsia->lesoes[i]->rotulo) - 1);
-        strncpy(biopsia->lesoes[i]->diagnostico, lesoes[i]->diagnostico, sizeof(biopsia->lesoes[i]->diagnostico) - 1);
-        strncpy(biopsia->lesoes[i]->regiao, lesoes[i]->regiao, sizeof(biopsia->lesoes[i]->regiao) - 1);
-        strncpy(biopsia->lesoes[i]->tamanho, lesoes[i]->tamanho, sizeof(int));
+        strncpy(biopsia->lesoes[i]->rotulo, lesoes[i]->rotulo, 3*sizeof(char));
+        strncpy(biopsia->lesoes[i]->diagnostico, lesoes[i]->diagnostico, 50*sizeof(char));
+        strncpy(biopsia->lesoes[i]->regiao, lesoes[i]->regiao, 50*sizeof(char));
+        biopsia->lesoes[i]->tamanho = lesoes[i]->tamanho;
     }
 
     return biopsia;
@@ -75,7 +76,7 @@ void imprimeNaTelaBiopsia(void *dado){
     printf("CPF: %s\n\n", biopsia->CPF);
     printf("SOLICITACAO DE BIOPSIA PARA AS LESOES:\n");
     for(int i=0; i<biopsia->qntdLesoes; i++){
-        printf("%s - %s - %s - %dMM\n\n", biopsia->lesoes[i]->rotulo, biopsia->lesoes[i]->diagnostico);
+        printf("%s - %s - %s - %dMM\n\n", biopsia->lesoes[i]->rotulo, biopsia->lesoes[i]->diagnostico, biopsia->lesoes[i]->regiao, biopsia->lesoes[i]->tamanho);
     }
 
     printf("%s (%s)\n", biopsia->nomeMedico, biopsia->CRM);
@@ -94,7 +95,7 @@ void imprimeNaTelaBiopsia(void *dado){
 void imprimeEmArquivoBiopsia(void *dado, char *path){
 
     if(dado != NULL){
-        char *caminhoArquivo[100];
+        char caminhoArquivo[100];
         FILE *pArquivo = NULL;
 
         sprintf(caminhoArquivo, "%s/%s", path, NOME_ARQUIVO_BIOPSIA);
