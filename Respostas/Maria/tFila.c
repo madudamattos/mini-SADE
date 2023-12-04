@@ -27,6 +27,7 @@ void desalocaFila(tFila *f){
         for(int i = 0; i < f->qtdDocumentos; i++){
             desalocaDocumento(f->documentos[i]);
         }
+        free(f->documentos);
         free(f);
     }
 }

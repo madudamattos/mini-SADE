@@ -69,25 +69,52 @@ void imprimeNaTelaReceita(void *dado){
  * O nome do arquivo e a maneira de escrita é definido dentro da função
  */
 void imprimeEmArquivoReceita(void *dado, char *path){
+    FILE *pReceita = NULL;
+    char caminho[100];
+
+    sprintf(caminho, "%s/%s", path, NOME_ARQUIVO_RECEITA);
+
+    pReceita = fopen(caminho, "w");
     
+
+
     if(dado != NULL){
-        char *caminhoArquivo[100];
-        FILE *pArquivo = NULL;
-
-        sprintf(caminhoArquivo, "%s/%s", path, NOME_ARQUIVO_RECEITA);
-
-        pArquivo = fopen(caminhoArquivo, "wb");
-    
-        if (pArquivo == NULL) {
-            printf("Não foi possível abrir o arquivo\n");
-            exit(1);
-        }
-
         tReceita *receita = (tReceita *)dado;
+        fprintf(pReceita, "RECEITUARIO\n");
+        fprintf(pReceita, "NOME: %s\n\n", receita->nomePaciente);
+        fprintf(pReceita, "USO ");
+            if(receita->tipoUso == ORAL) fprintf(pReceita, "ORAL\n\n");
+            else if(receita->tipoUso == TOPICO) fprintf(pReceita, "TOPICO\n\n");
+        fprintf(pReceita, "%s\n", receita->nomeMedicamento);
+        fprintf(pReceita, "%d %s\n\n", receita->qntd, receita->tipoMedicamento);
 
-        fwrite(receita, sizeof(tReceita), 1, pArquivo);
-        
-        fclose(pArquivo);
+        fprintf(pReceita, "%s\n\n", receita->instrucoes);
+       
+        fprintf(pReceita, "%s (%s)\n", receita->nomeMedico, receita->CRM);
+
+        fprintf(pReceita, "%s\n", receita->dataStr);
     }
+
+    fclose(pReceita);
+
+    // if(dado != NULL){
+    //     char *caminhoArquivo[100];
+    //     FILE *pArquivo = NULL;
+
+    //     sprintf(caminhoArquivo, "%s/%s", path, NOME_ARQUIVO_RECEITA);
+
+    //     pArquivo = fopen(caminhoArquivo, "wb");
+    
+    //     if (pArquivo == NULL) {
+    //         printf("Não foi possível abrir o arquivo\n");
+    //         exit(1);
+    //     }
+
+    //     tReceita *receita = (tReceita *)dado;
+
+    //     fwrite(receita, sizeof(tReceita), 1, pArquivo);
+        
+    //     fclose(pArquivo);
+    // }
 
 }
