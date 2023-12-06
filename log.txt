@@ -100,7 +100,7 @@ EXECUTANDO O VALGRIND EM CADA CASO:
  - Pasta tFila / Caso 2:
  - Arquivo de output gerado: Resultados/Maria/tFila/Casos/2/result_valgrind.txt.
  - Valgrind: Ok! allocs: 116, frees: 116, errors: 0 | Desconto do valgrind: 0.0%
- - Resultado para o biopsia.txt: Ok! Peso: 1.0
+ - Resultado para o biopsia.txt: Incorreto!
  - Resultado para o encaminhamento.txt: Ok! Peso: 1.0
  - Resultado para o lista_busca.txt: Ok! Peso: 3.0
  - Resultado para o receita.txt: Ok! Peso: 1.0
@@ -109,7 +109,7 @@ EXECUTANDO O VALGRIND EM CADA CASO:
  - Pasta tFila / Caso 3:
  - Arquivo de output gerado: Resultados/Maria/tFila/Casos/3/result_valgrind.txt.
  - Valgrind: Ok! allocs: 141, frees: 141, errors: 0 | Desconto do valgrind: 0.0%
- - Resultado para o biopsia.txt: Ok! Peso: 1.0
+ - Resultado para o biopsia.txt: Incorreto!
  - Resultado para o encaminhamento.txt: Ok! Peso: 1.0
  - Resultado para o lista_busca.txt: Ok! Peso: 3.0
  - Resultado para o receita.txt: Ok! Peso: 1.0
@@ -127,7 +127,7 @@ EXECUTANDO O VALGRIND EM CADA CASO:
  - Pasta tDocumento / Caso 2:
  - Arquivo de output gerado: Resultados/Maria/tDocumento/Casos/2/result_valgrind.txt.
  - Valgrind: Ok! allocs: 116, frees: 116, errors: 0 | Desconto do valgrind: 0.0%
- - Resultado para o biopsia.txt: Ok! Peso: 1.0
+ - Resultado para o biopsia.txt: Incorreto!
  - Resultado para o encaminhamento.txt: Ok! Peso: 1.0
  - Resultado para o lista_busca.txt: Ok! Peso: 3.0
  - Resultado para o receita.txt: Ok! Peso: 1.0
@@ -136,7 +136,7 @@ EXECUTANDO O VALGRIND EM CADA CASO:
  - Pasta tDocumento / Caso 3:
  - Arquivo de output gerado: Resultados/Maria/tDocumento/Casos/3/result_valgrind.txt.
  - Valgrind: Ok! allocs: 141, frees: 141, errors: 0 | Desconto do valgrind: 0.0%
- - Resultado para o biopsia.txt: Ok! Peso: 1.0
+ - Resultado para o biopsia.txt: Incorreto!
  - Resultado para o encaminhamento.txt: Ok! Peso: 1.0
  - Resultado para o lista_busca.txt: Ok! Peso: 3.0
  - Resultado para o receita.txt: Ok! Peso: 1.0
@@ -154,7 +154,7 @@ EXECUTANDO O VALGRIND EM CADA CASO:
  - Pasta tReceita / Caso 2:
  - Arquivo de output gerado: Resultados/Maria/tReceita/Casos/2/result_valgrind.txt.
  - Valgrind: Ok! allocs: 115, frees: 115, errors: 0 | Desconto do valgrind: 0.0%
- - Resultado para o biopsia.txt: Ok! Peso: 1.0
+ - Resultado para o biopsia.txt: Incorreto!
  - Resultado para o encaminhamento.txt: Ok! Peso: 1.0
  - Resultado para o lista_busca.txt: Ok! Peso: 3.0
  - Resultado para o receita.txt: Ok! Peso: 1.0
@@ -163,7 +163,7 @@ EXECUTANDO O VALGRIND EM CADA CASO:
  - Pasta tReceita / Caso 3:
  - Arquivo de output gerado: Resultados/Maria/tReceita/Casos/3/result_valgrind.txt.
  - Valgrind: Ok! allocs: 139, frees: 139, errors: 0 | Desconto do valgrind: 0.0%
- - Resultado para o biopsia.txt: Ok! Peso: 1.0
+ - Resultado para o biopsia.txt: Incorreto!
  - Resultado para o encaminhamento.txt: Ok! Peso: 1.0
  - Resultado para o lista_busca.txt: Ok! Peso: 3.0
  - Resultado para o receita.txt: Ok! Peso: 1.0
@@ -239,12 +239,12 @@ Nome 0: Maria
  - Valgrinds Corretos completo: 3 valgrinds corretos de 3 (não teve desconto na nota)
  - Valgrinds Corretos main: 3 valgrinds corretos de 3 (não teve desconto na nota)
  - Cômputo final das Notas:
- - Pasta tFila (peso 1.0): 15 resultados corretos de 18 / Nota 1.00
- - Pasta tDocumento (peso 1.0): 15 resultados corretos de 18 / Nota 1.00
- - Pasta tReceita (peso 0.5): 15 resultados corretos de 18 / Nota .50
+ - Pasta tFila (peso 1.0): 13 resultados corretos de 18 / Nota .93
+ - Pasta tDocumento (peso 1.0): 13 resultados corretos de 18 / Nota .93
+ - Pasta tReceita (peso 0.5): 13 resultados corretos de 18 / Nota .46
  - Pasta completo (peso 0.0): 0 resultados corretos de 18 / Nota 0
  - Pasta main (peso 7.5): 0 resultados corretos de 18 / Nota 0
- - Nota Final Maria: 2.50
+ - Nota Final Maria: 2.32
 
 ----------------------------------------------------------------------------
 
