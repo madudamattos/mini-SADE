@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "tMenu.h"
 
 void MenuCaminhoBancoDados(){
     printf("################################################\nDIGITE O CAMINHO DO BANCO DE DADOS:\n################################################\n");
@@ -31,9 +32,3 @@ void MenuFilaImpressao(){
 void MenuBuscaPacientes(){
     printf("#################### BUSCAR PACIENTES #######################\nNOME DO PACIENTE:\nDATA DA CONSULTA:\nDIAGNOSTICO:\n############################################################\n");
 }
-
-
-
-
-
-

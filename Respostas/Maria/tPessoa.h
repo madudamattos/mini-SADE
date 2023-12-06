@@ -3,6 +3,13 @@
 #include <string.h>
 #include "tBiopsia.h"
 
+typedef enum{
+    PACIENTE = 0,
+    MEDICO = 1,
+    SECRETARIO = 2
+}ATOR;
+
+
 typedef struct tPessoa tPessoa;
 
 typedef struct tPaciente tPaciente;

@@ -5,6 +5,7 @@
 #include "tBiopsia.h"
 
 struct tPessoa{
+    ATOR classeAtor;
     char nome[100];
     char cpf[12];
     char dataNascimento[13];
@@ -14,10 +15,11 @@ struct tPessoa{
     char senha[20];
     char CRM[11];
     char nivelAcesso[10];
+    tPaciente *paciente;
 };
 
 struct tPaciente{
-    tPessoa *paciente;
+    tPessoa *paciente;  
     char diabetes[4];
     char fumante[4];
     char alergias[4];
@@ -27,7 +29,6 @@ struct tPaciente{
     tLesao** lesoes;
 };
 
-
 tPessoa* CriaPessoa(){
     tPessoa* pessoa = calloc(1, sizeof(tPessoa));
     
@@ -36,8 +37,6 @@ tPessoa* CriaPessoa(){
 
 void CadastraSecretario(char* caminhoConfig){
     tPessoa* secretario = CriaPessoa();
-
-    printf("");
 }
 
 void CadastraMedico(char* caminhoConfig){
@@ -48,3 +47,6 @@ void CadastraPaciente(char* caminhoConfig){
 
 }
 
+void DesalocaPessoa(tPessoa*){
+
+}

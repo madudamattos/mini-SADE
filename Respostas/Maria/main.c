@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include "tMenu.h"
 
-#define TAM_NOME_ARQUIVO 300
+#define TAM_NOME_CAMINHO 300
 
 // Função para verificar se um arquivo existe
 int fileExists(const char * filename){
@@ -13,24 +15,33 @@ int fileExists(const char * filename){
     return 0;
 }
 
-int main(){
-    char caminho[TAM_NOME_ARQUIVO];
+int main(int argc, char *argv[]){
+    char *caminhoConfig = argv[1];
+    char caminhoPastaSaida[TAM_NOME_CAMINHO];
+    char caminhoBancoDados[TAM_NOME_CAMINHO];
+    
+    if(argc < 2){
+        printf("ERRO: Pasta de saída não foi informada\n");
+        return 0;
+    }
 
-    printf("################################################\nDIGITE O CAMINHO DO BANCO DE DADOS:\n################################################\n");
+    sprintf(caminhoPastaSaida, "%s/saida/", caminhoConfig);
 
-    fgets(caminho, sizeof(caminho), stdin); // lê o caminho do banco de dados
+    //LE O BANCO DE DADOS ------------------------------------
+    MenuCaminhoBancoDados();
 
-    // remove o '\n' do final da string
-    caminho[strcspn(caminho, "\n")] = 0;
+
+    // lê o caminho do banco de dados
+    scanf("%[^\n]%*c", caminhoBancoDados);
 
     // Lista dos arquivos do banco de dados
     char* arquivos[] = {"secretarios.bin", "medicos.bin", "pacientes.bin", "consultas.bin", "lesoes.bin", "fila_impressao.bin"};
     int numArquivos = 6;
 
-    // Verifica se cada arquivo existe. Se não existir, cria o arquivo.
+    // Verifica se cada arquivo existe. Se não existir, cria o arquivo
     for (int i = 0; i < numArquivos; i++) {
-        char arquivo[TAM_NOME_ARQUIVO];
-        snprintf(arquivo, sizeof(arquivo), "%s/%s", caminho, arquivos[i]);
+        char arquivo[TAM_NOME_CAMINHO + 1];
+        sprintf(arquivo, "%s/%s", caminhoBancoDados, arquivos[i]);
 
         if (!fileExists(arquivo)) {
             FILE *file = fopen(arquivo, "wb");
