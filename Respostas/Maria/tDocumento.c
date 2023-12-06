@@ -16,6 +16,11 @@ tDocumento *criaDocumento(void *dado, func_ptr_imprimeNaTela imprimeNaTela,
 
     tDocumento *doc = (tDocumento *)calloc(1, sizeof(tDocumento));
     
+    if(doc == NULL){
+        printf("ERRO: falha na alocação do documento\n");
+        exit(1);
+    }
+
     doc->dado = dado;
     doc->imprimeNaTela = imprimeNaTela;
     doc->imprimeEmArquivo = ImprimeEmArquivo;

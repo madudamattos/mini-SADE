@@ -30,7 +30,6 @@ int main(int argc, char *argv[]){
     //LE O BANCO DE DADOS ------------------------------------
     MenuCaminhoBancoDados();
 
-
     // lê o caminho do banco de dados
     scanf("%[^\n]%*c", caminhoBancoDados);
 

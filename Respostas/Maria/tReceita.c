@@ -74,7 +74,7 @@ void imprimeEmArquivoReceita(void *dado, char *path){
 
     sprintf(caminho, "%s/%s", path, NOME_ARQUIVO_RECEITA);
 
-    pReceita = fopen(caminho, "w");
+    pReceita = fopen(caminho, "a");
     
 
 
@@ -92,7 +92,7 @@ void imprimeEmArquivoReceita(void *dado, char *path){
        
         fprintf(pReceita, "%s (%s)\n", receita->nomeMedico, receita->CRM);
 
-        fprintf(pReceita, "%s\n", receita->dataStr);
+        fprintf(pReceita, "%s\n\n", receita->dataStr);
     }
 
     fclose(pReceita);
