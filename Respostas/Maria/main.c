@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "tMenu.h"
+#include "tPessoa.h"
 
 #define TAM_NOME_CAMINHO 300
 
@@ -53,6 +54,12 @@ int main(int argc, char *argv[]){
     }
 
     // Aqui você pode continuar com o restante do seu programa...
+    printf("a\n");
+    printf("b\n");
+    
+    CadastraPaciente(caminhoBancoDados);
+    CadastraMedico(caminhoBancoDados);
+    CadastraSecretario(caminhoBancoDados);
 
     return 0;
 }

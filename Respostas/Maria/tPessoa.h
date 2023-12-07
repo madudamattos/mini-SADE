@@ -9,7 +9,6 @@ typedef enum{
     SECRETARIO = 2
 }ATOR;
 
-
 typedef struct tPessoa tPessoa;
 
 typedef struct tPaciente tPaciente;
@@ -18,21 +17,22 @@ tPessoa* CriaPessoa();
 
 tPessoa* CadastraPessoa();
 
-void CadastraSecretario(char* caminhoConfig);
+void CadastraSecretario();
 
-void CadastraMedico(char* caminhoConfig);
+void CadastraMedico();
 
-void CadastraPaciente(char* caminhoConfig);
+void CadastraPaciente();
 
 void DesalocaPessoa(tPessoa*);
 
-char RetornaCPFPaciente(tPessoa*);
+char* RetornaCPFPaciente(tPessoa*);
 
-char RetornaCRMMedico(tPessoa*);
+char* RetornaCRMMedico(tPessoa*);
 
-char RetornaNivelAcesso(tPessoa*);
+char* RetornaNivelAcesso(tPessoa*);
 
-char RetornaNomePaciente(tPessoa*);
+char* RetornaNomePaciente(tPessoa*);
 
-char RetornaDataNascimentoPaciente(tPessoa*);
+char* RetornaDataNascimentoPaciente(tPessoa*);
 
+ATOR RetornaClasseAtor(tPessoa* p);

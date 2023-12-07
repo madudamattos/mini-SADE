@@ -29,13 +29,12 @@ struct tPaciente{
 };
 
 tPessoa* CriaPessoa(){
-    tPessoa* p = calloc(1, sizeof(tPessoa));
+    tPessoa* p = (tPessoa*) calloc(1, sizeof(tPessoa));
     
     p->paciente = NULL;
-    p->paciente->lesoes = NULL;
 
     return p;
-}
+};
 
 tPessoa* CadastraPessoa(){
     tPessoa* pessoa = CriaPessoa();
@@ -54,7 +53,7 @@ tPessoa* CadastraPessoa(){
     return pessoa;
 }
 
-void CadastraSecretario(char* caminhoConfig){
+void CadastraSecretario(){
     printf("#################### CADASTRO SECRETARIO #######################\n");
 
     tPessoa* secretario = CadastraPessoa();
@@ -73,7 +72,7 @@ void CadastraSecretario(char* caminhoConfig){
     printf("CADASTRO REALIZADO COM SUCESSO. PRESSIONE QUALQUER TECLA PARA VOLTAR PARA O MENU INICIAL\n###############################################################\n");
 }
 
-void CadastraMedico(char* caminhoConfig){
+void CadastraMedico(){
     printf("#################### CADASTRO MEDICO #######################\n");
 
     tPessoa* medico = CadastraPessoa();
@@ -92,7 +91,7 @@ void CadastraMedico(char* caminhoConfig){
     printf("CADASTRO REALIZADO COM SUCESSO. PRESSIONE QUALQUER TECLA PARA VOLTAR PARA O MENU INICIAL\n###############################################################\n");
 }
 
-void CadastraPaciente(char* caminhoConfig){
+void CadastraPaciente(){
     printf("#################### CADASTRO PACIENTE #######################\n");
 
     tPessoa* paciente = CadastraPessoa();
@@ -110,7 +109,7 @@ void DesalocaPessoa(tPessoa* p){
     if(p != NULL){
         if(p->paciente != NULL){
             if(p->paciente->lesoes != NULL){
-                DesalocaLesoes(p->paciente->lesoes);
+                //DesalocaLesoes(p->paciente->lesoes);
                 free(p->paciente->lesoes);
             }
             free(p->paciente);
@@ -118,25 +117,33 @@ void DesalocaPessoa(tPessoa* p){
 
         free(p);
     }
-
+    
 }
 
-char RetornaCPFPessoa(tPessoa* p){
+char* RetornaCPFPessoa(tPessoa* p){
     return p->cpf;
 }
 
-char RetornaCRMMedico(tPessoa* p){
-    if(p->nivelAcesso == MEDICO){
+char* RetornaCRMMedico(tPessoa* p){
+    if(p->classeAtor == MEDICO){
         return p->CRM;
     }
 
     return NULL;
 }
 
-char RetornaNivelAcessoPessoa(tPessoa* p){
+char* RetornaNivelAcessoPessoa(tPessoa* p){
     return p->nivelAcesso;
 }
 
-char RetornaNomePessoa(tPessoa* p){
-    return p->nome
+char* RetornaNomePessoa(tPessoa* p){
+    return p->nome;
 } 
+
+char* RetornaDataNascimetoPessoa(tPessoa* p){
+    return p->dataNascimento;
+}
+
+ATOR RetornaClasseAtor(tPessoa* p){
+    return p->classeAtor;
+}
