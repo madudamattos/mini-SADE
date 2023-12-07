@@ -16,11 +16,15 @@ typedef struct tPaciente tPaciente;
 
 tPessoa* CriaPessoa();
 
+tPessoa* CadastraPessoa();
+
 void CadastraSecretario(char* caminhoConfig);
 
 void CadastraMedico(char* caminhoConfig);
 
 void CadastraPaciente(char* caminhoConfig);
+
+void DesalocaPessoa(tPessoa*);
 
 char RetornaCPFPaciente(tPessoa*);
 
@@ -31,3 +35,4 @@ char RetornaNivelAcesso(tPessoa*);
 char RetornaNomePaciente(tPessoa*);
 
 char RetornaDataNascimentoPaciente(tPessoa*);
+
