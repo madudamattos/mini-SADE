@@ -53,10 +53,14 @@ int quantidadeDocumentosNaFila(tFila *f){
 }
 
 void imprimeFila(tFila *f, char *path){
+    printf("################### FILA DE IMPRESSAO MEDICA #####################\nEXECUTANDO FILA DE IMPRESSÃO:\n");
 
     for(int i = 0; i< f->qtdDocumentos; i++){
         imprimeNaTelaDocumento(f->documentos[i]);
         imprimeEmArquivoDocumento(f->documentos[i], path);
     }
     
+    printf("PRESSIONE QUALQUER TECLA PARA VOLTAR PARA O MENU PRINCIPAL\n###########################################################\n");
+
+    scanf("%*c");
 }

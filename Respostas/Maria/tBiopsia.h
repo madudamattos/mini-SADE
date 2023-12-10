@@ -7,12 +7,15 @@
 typedef struct tBiopsia tBiopsia;
 typedef struct tLesao tLesao;
 
+tLesao** ClonaLesoes(tLesao** lesoes, int qtdLesoes);
 
 /**
  * Função que recebe todas as informações pertinentes a uma Biopsia e retorna
  * um ponteiro com a Biopsia criada.
  *
  */
+
+
 tBiopsia *criaBiopsia(char *nomePaciente, char *CPF,
                       tLesao** lesoes, int qntdLesoes,
                       char *nomeMedico, char *CRM, char *dataStr);

@@ -33,6 +33,8 @@ tPessoa* CadastraMedico();
 
 tPessoa* CadastraPaciente();
 
+tPessoa* ClonaPessoa(tPessoa*p);
+
 void DesalocaPessoa(tPessoa*);
 
 void DesalocaPaciente(tPaciente*);

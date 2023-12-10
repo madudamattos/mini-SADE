@@ -22,6 +22,10 @@ struct tLesao{
     int crioterapia;
 };
 
+tLesao** ClonaLesoes(tLesao** lesoes, int qtdLesoes){
+    return NULL;
+}
+
 tBiopsia *criaBiopsia(char *nomePaciente, char *CPF,
                       tLesao** lesoes, int qntdLesoes,
                       char *nomeMedico, char *CRM, char *dataStr){

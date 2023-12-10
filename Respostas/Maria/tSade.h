@@ -5,12 +5,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include "tPessoa.h"
+#include "tBusca.h"
 
 typedef struct tSade tSade;
 
 tSade* CriaSADE();
 
-void InicializaSADE(tSade* sade, char *MenuCaminhoBancoDados);
+void InicializaSADE(tSade* sade, char* caminhoBancoDados);
 
 void ExecutaSADE(tSade* sade, char *caminhoBancoDados);
 
@@ -26,8 +27,6 @@ void AddPacienteSADE(tSade* sade);
 
 void BuscaPacientes(tSade* sade);
 
-void ImprimeEmArquivoBusca(tPessoa** pacientesEncontrados, int qtdPacientesEncontrados, char*path);
-
-void ImprimeNaTelaBusca(tPessoa **pacientesEncontrados, int qtdPacientesEncontrados);
+int fileExists(const char * filename);
 
 #endif

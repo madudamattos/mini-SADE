@@ -7,6 +7,7 @@
 
 struct tPessoa{
     ATOR classeAtor;
+    NIVELACESSO nivelAcesso;
     char nome[100];
     char cpf[12];
     char dataNascimento[13];
@@ -15,11 +16,6 @@ struct tPessoa{
     char user[20];
     char senha[20];
     char CRM[11];
-    NIVELACESSO nivelAcesso;
-    tPaciente *paciente;
-};
-
-struct tPaciente{
     int diabetes;
     int fumante;
     int alergias;
@@ -35,7 +31,7 @@ tPessoa* CriaPessoa(){
 
     tPessoa* p = (tPessoa*) calloc(1, sizeof(tPessoa));
 
-    p->paciente = NULL;
+    p->lesoes= NULL;
 
     return p;
 };
@@ -89,6 +85,7 @@ tPessoa* CadastraMedico(){
     tPessoa* medico = CadastraPessoa();
 
     medico->classeAtor = MEDICO;
+    medico->nivelAcesso = MED;
 
     printf("CRM");
     scanf("%[^\n]%*c", medico->CRM);
@@ -110,9 +107,9 @@ tPessoa* CadastraPaciente(){
     tPessoa* paciente = CadastraPessoa();
 
     paciente->classeAtor = PACIENTE;
+    paciente->nivelAcesso = NADA;
 
-    paciente->paciente = calloc(1, sizeof(tPaciente));
-    paciente->paciente->lesoes = NULL;
+    paciente->lesoes = NULL;
 
     CadastroRealizado();
 
@@ -121,20 +118,51 @@ tPessoa* CadastraPaciente(){
     return paciente;
 }
 
-void DesalocaPessoa(tPessoa* p){
-    if(p != NULL){
-        if(p->paciente != NULL){
-            DesalocaPaciente(p->paciente);
-        }
-        free(p);
+tPessoa* ClonaPessoa(tPessoa*p){
+    if (p == NULL) {
+        printf("p is NULL\n");
+        return NULL;
     }
+
+    tPessoa* clone = (tPessoa*) calloc(1, sizeof(tPessoa));
+    if (clone == NULL) {
+        printf("Failed to allocate memory for clone\n");
+        return NULL;
+    }
+
+    clone->lesoes= NULL;
+
+    printf("%s\n", p->nome);
+    strcpy(clone->nome, p->nome);
+    strcpy(clone->cpf, p->cpf);
+    strcpy(clone->dataNascimento, p->dataNascimento);
+    strcpy(clone->telefone, p->telefone);
+    strcpy(clone->genero, p->genero);
+    strcpy(clone->user, p->user);
+    strcpy(clone->senha, p->senha);
+    strcpy(clone->CRM, p->CRM);
+    strcpy(clone->tipoPele, p->tipoPele);
+    clone->diabetes = p->diabetes;
+    clone->fumante = p->fumante;
+    clone->alergias = p->alergias;
+    clone->histCancer = p->histCancer;
+    clone->qntdLesoes = p->qntdLesoes;
+
+    if(p->lesoes != NULL){
+        clone->lesoes = ClonaLesoes(p->lesoes, p->qntdLesoes);
+    }
+    else{
+        clone->lesoes = NULL;
+    }
+
+    return clone;
+
 }
 
-void DesalocaPaciente(tPaciente* p){
+void DesalocaPessoa(tPessoa* p){
     if(p != NULL){
         if(p->lesoes != NULL){
             DesalocaLesoes(p->lesoes, p->qntdLesoes);
-            free(p->lesoes);
         }
         free(p);
     }
@@ -161,32 +189,32 @@ char* RetornaDataNascimetoPessoa(tPessoa* p){
 }
 
 void SetaPacienteParaDiabetico(tPessoa* p){
-    if(p->paciente != NULL){
-        p->paciente->diabetes = 1;
+    if(p != NULL){
+        p->diabetes = 1;
     }
 }
 
 void SetaPacienteParaFumante(tPessoa* p){
-    if(p->paciente != NULL){
-        p->paciente->fumante = 1;
+    if(p != NULL){
+        p->fumante = 1;
     }
 }
 
 void SetaPacienteParaAlergico(tPessoa* p){
-    if(p->paciente != NULL){
-        p->paciente->alergias = 1;
+    if(p != NULL){
+        p->alergias = 1;
     }
 }
 
 void SetaPacienteParaHistoricoCancer(tPessoa* p){
-    if(p->paciente != NULL){
-        p->paciente->histCancer = 1;
+    if(p != NULL){
+        p->histCancer = 1;
     }
 }
 
 void SetaPacienteTipoPele(tPessoa* p, char tipoPele[]){
-    if(p->paciente != NULL){
-        strcpy(p->paciente->tipoPele, tipoPele);
+    if(p != NULL){
+        strcpy(p->tipoPele, tipoPele);
     }
 }
 

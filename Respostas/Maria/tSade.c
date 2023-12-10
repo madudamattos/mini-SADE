@@ -1,3 +1,5 @@
+#define TAM_NOME_CAMINHO 300
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,6 +8,7 @@
 #include "tMenu.h"
 #include "tFila.h"
 #include "tConsulta.h"
+#include "tBusca.h"
 
 struct tSade{
     int qtdPacientes;
@@ -33,13 +36,49 @@ tSade* CriaSADE(){
     return sade;
 }
 
-void InicializaSADE(tSade* sade, char *MenuCaminhoBancoDados){
+void InicializaSADE(tSade* sade, char* caminhoBancoDados){
+    //LE O BANCO DE DADOS ------------------------------------
+    printf("################################################\nDIGITE O CAMINHO DO BANCO DE DADOS:");
 
+
+    // lê o caminho do banco de dados
+    scanf("%[^\n]%*c", caminhoBancoDados);
+
+    printf("################################################\n");
+
+    // Lista dos arquivos do banco de dados
+    char* arquivos[] = {"secretarios.bin", "medicos.bin", "pacientes.bin", "consultas.bin", "lesoes.bin", "fila_impressao.bin"};
+    int numArquivos = 6;
+
+    // Verifica se cada arquivo existe. Se não existir, cria o arquivo
+    for (int i = 0; i < numArquivos; i++) {
+        char arquivo[TAM_NOME_CAMINHO + 1];
+        sprintf(arquivo, "%s/%s", caminhoBancoDados, arquivos[i]);
+
+        if (!fileExists(arquivo)) {
+            FILE *file = fopen(arquivo, "wb");
+            if (file == NULL) {
+                printf("Não foi possível criar o arquivo %s\n", arquivo);
+                exit(1);
+            }
+            fclose(file);
+        }
+    }
+
+}
+
+int fileExists(const char * filename){
+    FILE *file;
+    if (file = fopen(filename, "r")){
+        fclose(file);
+        return 1;
+    }
+    return 0;
 }
 
 void ExecutaSADE(tSade* sade, char *caminhoBancoDados){
 
-    NIVELACESSO acesso = RealizaLogin(caminhoBancoDados);
+    NIVELACESSO acesso = RealizaLogin(sade);
     int opcao = -1;
     //imprimir menu principal
 
@@ -53,11 +92,10 @@ void ExecutaSADE(tSade* sade, char *caminhoBancoDados){
             if(opcao == 1) AddSecretarioSADE(sade);
             else if(opcao == 2) AddMedicoSADE(sade);
             else if(opcao == 3) AddPacienteSADE(sade);
-            //else if(opcao == 4) RealizaConsulta();
-            //else if(opcao == 5) BuscaPacientes();
+            else if(opcao == 4) RealizaConsulta();
+            else if(opcao == 5) BuscaPacientes(sade);
             //else if(opcao == 6) ExibeRelatorioGeral();
-            //else if(opcao == 7) ImprimeFilaImpressao();
-
+            else if(opcao == 7) ExecutaFilaImpressao(sade, caminhoBancoDados);
         }
         break;
     
@@ -68,9 +106,12 @@ void ExecutaSADE(tSade* sade, char *caminhoBancoDados){
             scanf("%d", &opcao);
             if (opcao == 2) AddMedicoSADE(sade);
             else if(opcao == 3) AddPacienteSADE(sade);
-            //else if(opcao == 5) BuscaPacientes(sade);
+            else if(opcao == 5){
+                BuscaPacientes(sade);
+                break;
+            }
             //else if(opcao == 6) ExibeRelatorioGeral();
-            //else if(opcao == 7) ImprimeFilaImpressao();
+            else if(opcao == 7) ExecutaFilaImpressao(sade, caminhoBancoDados);
         }
         break;
         
@@ -79,10 +120,13 @@ void ExecutaSADE(tSade* sade, char *caminhoBancoDados){
             MenuPrincipalMedico();
 
             scanf("%d", &opcao);
-            //if(opcao == 4) RealizaConsulta();
-            //else if(opcao == 5) BuscaPacientes();
+            if(opcao == 4) RealizaConsulta(sade);
+            else if(opcao == 5){
+                BuscaPacientes(sade);
+                break;
+            }
             //else if(opcao == 6) ExibeRelatorioGeral();
-            //else if(opcao == 7) ImprimeFilaImpressao();
+            else if(opcao == 7) ExecutaFilaImpressao(sade, caminhoBancoDados);
         }
         break;
     
@@ -92,36 +136,26 @@ void ExecutaSADE(tSade* sade, char *caminhoBancoDados){
         break;
     }
 
-    //imprime os pacientes de teste
-
-    for(int i=0; i<sade->qtdPacientes; i++){
-        printf("PACIENTE %d\nNOME:%s, CPF:%s\n", i, sade->pacientes[i]->nome, sade->pacientes[i]->cpf);
-    }
-    //imprime os secretarios
-    //imprime os medicos
-
 }
 
 void FinalizaSADE(tSade* sade, char *caminhoBancoDados){
 
     // passa as informações todas pros arquivos
+    
 
     //desaloca os vetores 
     for(int i = 0; i < sade->qtdSecretarios; i++){
         DesalocaPessoa(sade->secretarios[i]);
-        free(sade->secretarios[i]);
     }
     free(sade->secretarios);
 
     for(int i = 0; i < sade->qtdMedicos; i++){
         DesalocaPessoa(sade->medicos[i]);
-        free(sade->medicos[i]);
     }
     free(sade->medicos);
 
     for(int i = 0; i < sade->qtdPacientes; i++){
         DesalocaPessoa(sade->pacientes[i]);
-        free(sade->pacientes[i]);
     }
     free(sade->pacientes);
 
@@ -130,7 +164,7 @@ void FinalizaSADE(tSade* sade, char *caminhoBancoDados){
     free(sade);
 }
 
-int RealizaLogin(char *caminhoBancaDados){
+int RealizaLogin(tSade* sade){
     int login;
 
     printf("######################## ACESSO MINI-SADE ######################\nDIGITE SEU LOGIN:");
@@ -167,70 +201,74 @@ void AddPacienteSADE(tSade* sade){
     sade->pacientes[sade->qtdPacientes-1] = CadastraPaciente();
 } 
 
-// void BuscaPacientes(tSade* sade){
-//     char nomePaciente[100];
-//     int qtdPacientesEncontrados = 0;
-//     tPessoa **pacientesEncontrados = NULL;
-//     int i;
+void BuscaPacientes(tSade* sade){
+    char nomePaciente[100];
+    int qtdPacientesEncontrados = 0;
+    tPessoa **pacientesEncontrados = NULL;
+    int i;
 
-//     printf("#################### BUSCAR PACIENTES #######################\nNOME DO PACIENTE:");
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
 
-//     scanf("%[^\n]%*c", nomePaciente);
+    printf("#################### BUSCAR PACIENTES #######################\nNOME DO PACIENTE:");
 
-//     printf("############################################################\n");
+    scanf("%[^\n]%*c", nomePaciente);
 
-//     printf("#################### BUSCAR PACIENTES #######################\n");
+    //localiza os pacientes e armazena num vetor clone
+    for(i=0; i<sade->qtdPacientes; i++){
+        if(strcmp(RetornaNomePessoa(sade->pacientes[i]), nomePaciente) == 0){
+            qtdPacientesEncontrados++;
 
-//     for(i=0; i<sade->qtdPacientes; i++){
-//         if(strcmp(sade->pacientes[i]->nome, nomePaciente) == 0){
-//             qtdPacientesEncontrados = 1;
-//             if(qtdPacientesEncontrados == 1){
-//                 printf("PACIENTES ENCONTRADOS:\n");
-//             }
-//             pacientesEncontrados = realloc(pacientesEncontrados, sizeof(tPessoa *) * qtdPacientesEncontrados);
-//             pacientesEncontrados[qtdPacientesEncontrados] = sade->pacientes[i];
-//         }
-//     }
+            pacientesEncontrados = realloc(pacientesEncontrados, sizeof(tPessoa *) * qtdPacientesEncontrados);
+            pacientesEncontrados[qtdPacientesEncontrados-1] = sade->pacientes[i];
+        }
+    }
 
-//     ImprimeNaTelaBusca(pacientesEncontrados, qtdPacientesEncontrados);
+    tBusca* busca = criaListaBusca(pacientesEncontrados, qtdPacientesEncontrados);
 
-//     if(qtdPacientesEncontrados == 0){
-//         printf("NENHUM PACIENTE FOI ENCONTRADO. PRESSIONE QUALQUER TECLA PARA RETORNAR AO MENU ANTERIOR\n");
-//     }
+    free(pacientesEncontrados);
 
-//     else{
-//         printf("SELECIONE UMA OPÇÃO:\t(1) ENVIAR LISTA PARA IMPRESSAO\n\t(2) RETORNAR AO MENU PRINCIPAL\n");
-//     }
+    imprimeNaTelaListaBusca(busca);
 
-//     printf("############################################################\n");
+    int opcao = 0;
 
-//     int opcao = 0;
+    scanf("%d", &opcao); 
 
-//     scanf("%d", &opcao); 
+    if(qtdPacientesEncontrados == 0){
+        return;
+    }
+    else{
+        switch (opcao){
+        case 1:
+            //envia busca para a fila de impressão
+            insereDocumentoFila(sade->fila, busca, imprimeNaTelaListaBusca, imprimeEmArquivoListaBusca, desalocaBusca);
 
-//     if(opcao == 2){
-//         return;
-//     }
+            printf("#################### BUSCAR PACIENTES #######################\nLISTA ENVIADA PARA FILA DE IMPRESSAO. PRESSIONE QUALQUER TECLA PARA RETORNAR AO MENU PRINCIPAL\n############################################################\n");
+            scanf("%*c");
+            break;
+        case 2:
+            //retorna ao menu principal
+            return;
+        default:
+            break;
+        }
+    }
 
-//     else{
-         
-//     }
-//     //executa as outras funções do menu
-// }
+}
 
-// void ImprimeNaTelaBusca(tPessoa **pacientesEncontrados, int qtdPacientesEncontrados){
+void ExecutaFilaImpressao(tSade* sade, char *caminhoBancoDados){
 
-//     if(qtdPacientesEncontrados == 0) return;
+    printf("################### FILA DE IMPRESSAO MEDICA #####################\nESCOLHA UMA OPCAO:\n\t(1) EXECUTAR FILA DE IMPRESSAO\n\t(2) RETORNAR AO MENU ANTERIOR\n############################################################\n");
+
+    int opcao = 0;
+
+    scanf("%d", &opcao);
+
+    if(opcao == 1){
+       imprimeFila(sade->fila, caminhoBancoDados);
+    }
+    else if(opcao == 2){
+        return;
+    }
     
-//     int i=0; 
-//     for(i=0; i<qtdPacientesEncontrados; i++){
-//         printf("%d - %s (%s)\n", i, pacientesEncontrados[i]->nome, pacientesEncontrados[i]->cpf);
-//     }
-// }
-
-// void ImprimeEmArquivoBusca(tPessoa** pacientesEncontrados, int qtdPacientesEncontrados, char*path){
-//     int i=0; 
-//     for(i=0; i<qtdPacientesEncontrados; i++){
-//         printf("%d - %s (%s)\n", i, pacientesEncontrados[i]->nome, pacientesEncontrados[i]->cpf);
-//     }
-// }
+}
