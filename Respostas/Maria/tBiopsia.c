@@ -143,3 +143,10 @@ void imprimeEmArquivoBiopsia(void *dado, char *path){
     }
 
 }
+
+void DesalocaLesoes(tLesao** lesoes, int qntdLesoes){
+    for(int i=0; i<qntdLesoes; i++){
+        free(lesoes[i]);
+    }
+    free(lesoes);
+}

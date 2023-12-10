@@ -32,3 +32,7 @@ void MenuFilaImpressao(){
 void MenuBuscaPacientes(){
     printf("#################### BUSCAR PACIENTES #######################\nNOME DO PACIENTE:\nDATA DA CONSULTA:\nDIAGNOSTICO:\n############################################################\n");
 }
+
+void CadastroRealizado(){
+    printf("CADASTRO REALIZADO COM SUCESSO. PRESSIONE QUALQUER TECLA PARA VOLTAR PARA O MENU INICIAL\n###############################################################\n");
+}

@@ -1,8 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "tMenu.h"
+#include "tSade.h"
 #include "tPessoa.h"
+
+typedef struct tPessoa tPessoa;
+
+typedef struct tPaciente tPaciente;
+
+typedef struct tSade tSade;
 
 #define TAM_NOME_CAMINHO 300
 
@@ -29,10 +35,13 @@ int main(int argc, char *argv[]){
     sprintf(caminhoPastaSaida, "%s/saida/", caminhoConfig);
 
     //LE O BANCO DE DADOS ------------------------------------
-    MenuCaminhoBancoDados();
+    printf("################################################\nDIGITE O CAMINHO DO BANCO DE DADOS:");
+
 
     // lê o caminho do banco de dados
     scanf("%[^\n]%*c", caminhoBancoDados);
+
+    printf("################################################\n");
 
     // Lista dos arquivos do banco de dados
     char* arquivos[] = {"secretarios.bin", "medicos.bin", "pacientes.bin", "consultas.bin", "lesoes.bin", "fila_impressao.bin"};
@@ -54,12 +63,14 @@ int main(int argc, char *argv[]){
     }
 
     // Aqui você pode continuar com o restante do seu programa...
-    printf("a\n");
-    printf("b\n");
-    
-    CadastraPaciente(caminhoBancoDados);
-    CadastraMedico(caminhoBancoDados);
-    CadastraSecretario(caminhoBancoDados);
+
+    tSade* sade = CriaSADE();
+
+    InicializaSADE(sade, caminhoBancoDados);
+
+    ExecutaSADE(sade, caminhoBancoDados);
+
+    FinalizaSADE(sade, caminhoBancoDados);
 
     return 0;
 }

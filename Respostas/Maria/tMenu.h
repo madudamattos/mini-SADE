@@ -17,4 +17,6 @@ void MenuFilaImpressao();
 
 void MenuBuscaPacientes();
 
+void CadastroRealizado();
+
 #endif

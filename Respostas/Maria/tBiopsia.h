@@ -29,6 +29,7 @@ void desalocaBiopsia(void *dado);
  */
 void imprimeNaTelaBiopsia(void *dado);
 
+void DesalocaLesoes(tLesao** lesoes, int qntdLesoes);
 /**
  * Função que recebe um ponteiro genérico (que deve conter uma Biopsia) e imprime os dados no arquivo
  * específico de acordo com a descrição do trabalho.

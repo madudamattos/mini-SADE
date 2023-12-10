@@ -1,13 +1,23 @@
+#ifndef TPESSOA_H
+#define TPESSOA_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "tBiopsia.h"
 
 typedef enum{
-    PACIENTE = 0,
-    MEDICO = 1,
-    SECRETARIO = 2
+    PACIENTE,
+    MEDICO,
+    SECRETARIO
 }ATOR;
+
+typedef enum{
+    NADA = 0,
+    MED = 1,
+    USER = 2,
+    ADMIN = 3
+}NIVELACESSO;
 
 typedef struct tPessoa tPessoa;
 
@@ -17,22 +27,41 @@ tPessoa* CriaPessoa();
 
 tPessoa* CadastraPessoa();
 
-void CadastraSecretario();
+tPessoa* CadastraSecretario();
 
-void CadastraMedico();
+tPessoa* CadastraMedico();
 
-void CadastraPaciente();
+tPessoa* CadastraPaciente();
 
 void DesalocaPessoa(tPessoa*);
 
-char* RetornaCPFPaciente(tPessoa*);
+void DesalocaPaciente(tPaciente*);
+
+char* RetornaCPFPessoa(tPessoa*);
 
 char* RetornaCRMMedico(tPessoa*);
 
-char* RetornaNivelAcesso(tPessoa*);
+NIVELACESSO RetornaNivelAcessoPessoa(tPessoa* p);
 
-char* RetornaNomePaciente(tPessoa*);
+char* RetornaNomePessoa(tPessoa*);
 
-char* RetornaDataNascimentoPaciente(tPessoa*);
+char* RetornaDataNascimetoPessoa(tPessoa*);
+
+
+void SetaPacienteParaDiabetico(tPessoa* p);
+
+void SetaPacienteParaFumante(tPessoa* p);
+
+void SetaPacienteParaAlergico(tPessoa* p);
+
+void SetaPacienteParaHistoricoCancer(tPessoa* p);
+
+void SetaPacienteTipoPele(tPessoa* p, char tipoPele[]);
 
 ATOR RetornaClasseAtor(tPessoa* p);
+
+NIVELACESSO ConverteStringNivelAcesso(const char nivelAcessoStr[]);
+
+void ImprimePessoa(tPessoa* p);
+
+#endif
