@@ -32,16 +32,6 @@ tLesao* CriaLesao(int qtdLesoes){
     return lesao;
 }
 
-void AdicionaLesao(tLesao* lesao, tLesao **lesoes, int qtdLesoes){
-
-    lesoes = realloc(lesoes, qtdLesoes*sizeof(tLesao*));
-    lesoes[qtdLesoes-1] = lesao;
-
-    printf("LESAO REGISTRADA COM SUCESSO. PRESSIONE QUALQUER TECLA PARA RETORNAR AO MENU ANTERIOR\n############################################################\n");
-
-    scanf("%*c");
-}
-
 void ImprimeLesao(tLesao* lesao){
     printf("%s - %s - %s - %dMM\n", lesao->rotulo, lesao->diagnostico, lesao->regiao, lesao->tamanho);
 }
@@ -55,26 +45,6 @@ void ImprimeVetorLesoes(tLesao** lesoes, int qntdLesoes){
         ImprimeLesao(lesoes[i]);
     }
 };
-
-int RetornaQtdLesoesParaCirurgia(tLesao** lesoes, int qntdLesoes){
-    int qtdLesoesParaCirurgia = 0;
-    for(int i=0; i<qntdLesoes; i++){
-        if(RetornaCirurgia(lesoes[i]) == 1){
-            qtdLesoesParaCirurgia++;
-        }
-    }
-    return qtdLesoesParaCirurgia;
-}
-
-int RetornaQtdLesoesParaCrioterapia(tLesao** lesoes, int qntdLesoes){
-    int qtdLesoesParaCrioterapia = 0;
-    for(int i=0; i<qntdLesoes; i++){
-        if(RetornaCrioterapia(lesoes[i]) == 1){
-            qtdLesoesParaCrioterapia++;
-        }
-    }
-    return qtdLesoesParaCrioterapia;
-}
 
 int RetornaTamanhoLesao(tLesao* lesao){
     return lesao->tamanho;
@@ -122,4 +92,3 @@ void DesalocaLesoes(tLesao** lesoes, int qntdLesoes){
         free(lesoes);
     }
 }
-

@@ -71,6 +71,8 @@ tPessoa* CadastraSecretario(){
     printf("NIVEL DE ACESSO: ");
     scanf("%[^\n]%*c", acesso);
     secretario->nivelAcesso = ConverteStringNivelAcesso(acesso);
+
+    secretario->CRM[0] = '\0';
     
     CadastroRealizado();
 
@@ -188,12 +190,42 @@ char* RetornaDataNascimetoPessoa(tPessoa* p){
     return p->dataNascimento;
 }
 
-int RetornaQtdLesoesPaciente(tPessoa* p){
-    return p->qntdLesoes;
-}
-
 tLesao** RetornaLesoesPaciente(tPessoa* p){
     return p->lesoes;
+}
+
+char* RetornaGeneroPessoa(tPessoa* p){
+    return p->genero;
+}
+
+char* RetornaLoginPessoa(tPessoa* p){
+    return p->user;
+}
+
+char* RetornaSenhaPessoa(tPessoa* p){
+    return p->senha;
+}
+
+int RetornaIdadePessoa(tPessoa* p){
+    // data atual fixa
+    int diaAtual = 9;
+    int mesAtual = 11;
+    int anoAtual = 2023;
+
+    // extrai dia, mês e ano da data de nascimento
+    int diaNasc, mesNasc, anoNasc;
+
+    char* dataNascimento = "01/12/2002";
+
+    sscanf(dataNascimento, "%d/%d/%d", &diaNasc, &mesNasc, &anoNasc);
+
+    // calcula a idade
+    int idade = anoAtual - anoNasc;
+    if (mesAtual < mesNasc || (mesAtual == mesNasc && diaAtual < diaNasc)) {
+        idade--;
+    }
+
+    return idade;
 }
 
 void SetaPacienteParaDiabetico(tPessoa* p){
@@ -258,4 +290,47 @@ void ImprimePessoa(tPessoa* p){
     printf("TELEFONE: %s\n", p->telefone);
     printf("GENERO: %s\n", p->genero);
     printf("#################### DADOS PESSOA #######################\n");
+}
+
+int RetornaSomaTamanhoLesoesPessoa(tPessoa* pessoa){
+    int somaTamanhoLesoes = 0;
+    for(int i=0; i<pessoa->qntdLesoes; i++){
+        somaTamanhoLesoes += RetornaTamanhoLesao(pessoa->lesoes[i]);
+    }
+    return somaTamanhoLesoes;
+}
+
+int RetornaQtdLesoesParaCirurgia(tPessoa* p){
+    int qtdLesoesParaCirurgia = 0;
+    for(int i=0; i<p->qntdLesoes; i++){
+        if(RetornaCirurgia(p->lesoes[i]) == 1){
+            qtdLesoesParaCirurgia++;
+        }
+    }
+    return qtdLesoesParaCirurgia;
+}
+
+int RetornaQtdLesoesParaCrioterapia(tPessoa* p){
+    int qtdLesoesParaCrioterapia = 0;
+    for(int i=0; i<p->qntdLesoes; i++){
+        if(RetornaCrioterapia(p->lesoes[i]) == 1){
+            qtdLesoesParaCrioterapia++;
+        }
+    }
+    return qtdLesoesParaCrioterapia;
+}
+
+int RetornaQtdLesoesPaciente(tPessoa* p){
+    return p->qntdLesoes;
+}
+
+void AdicionaLesao(tLesao* lesao, tPessoa* p){
+    //printf("adiciona lesao:\n");
+    //printf("qtdAntes: %d\n", qtdLesoes);
+    p->lesoes = realloc(p->lesoes, (p->qntdLesoes)*sizeof(tLesao*));
+    p->lesoes[(p->qntdLesoes)-1] = lesao;
+
+    printf("LESAO REGISTRADA COM SUCESSO. PRESSIONE QUALQUER TECLA PARA RETORNAR AO MENU ANTERIOR\n############################################################\n");
+
+    scanf("%*c");
 }

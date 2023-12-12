@@ -15,7 +15,7 @@ void RealizaConsulta(tSade* sade){
     char dataConsulta[11], cpf[12], tipoPele[3];
     int diabetes, fumante, alergia, histCancer;
 
-    tPessoa* medico = CadastraMedico();
+    tPessoa* medico = RetornaUsuarioLogado(sade);
 
     printf("#################### CONSULTA MEDICA #######################\nCPF DO PACIENTE:");
 
@@ -91,7 +91,7 @@ void CadastraLesao(tPessoa* paciente){
     while ((c = getchar()) != '\n' && c != EOF);
     AumentaQtdLesoesPaciente(paciente);
     tLesao* lesao = CriaLesao(RetornaQtdLesoesPaciente(paciente));
-    AdicionaLesao(lesao, RetornaLesoesPaciente(paciente), RetornaQtdLesoesPaciente(paciente));
+    AdicionaLesao(lesao, paciente);    
 }
 
 void GeraReceita(tSade* sade, tPessoa* paciente, tPessoa* medico, char* dataStr){
@@ -120,7 +120,7 @@ void GeraReceita(tSade* sade, tPessoa* paciente, tPessoa* medico, char* dataStr)
 
     insereDocumentoFila(RetornaFilaSADE(sade), receita, imprimeNaTelaReceita, imprimeEmArquivoReceita, desalocaReceita);
     
-    printf("RECEITA ENVIADA PARA FILA DE IMPRESSAO. PRESSIONE QUALQUER TECLA PARA RETORNAR AO MENU ANTERIOR\n############################################################\n");
+    printf("\nRECEITA ENVIADA PARA FILA DE IMPRESSAO. PRESSIONE QUALQUER TECLA PARA RETORNAR AO MENU ANTERIOR\n############################################################\n");
     
     scanf("%*c");
     
@@ -130,9 +130,9 @@ void GeraReceita(tSade* sade, tPessoa* paciente, tPessoa* medico, char* dataStr)
 void SolicitaBiopsia(tSade* sade, tPessoa* pessoa, tPessoa* medico, char* dataStr){
     int qtdLesoes = RetornaQtdLesoesPaciente(pessoa);
     tLesao** lesoes = RetornaLesoesPaciente(pessoa);
-    printf("1\n");
+    
     tBiopsia* biopsia = CriaBiopsia(RetornaNomePessoa(pessoa), RetornaCPFPessoa(pessoa), lesoes, qtdLesoes, RetornaNomePessoa(medico), RetornaCRMMedico(medico), dataStr);
-    printf("2\n");
+
     if(biopsia == NULL){
         printf("#################### CONSULTA MEDICA #######################\nNAO E POSSIVEL SOLICITAR BIOPSIA SEM LESAO CIRURGICA. PRESSIONE QUALQUER TECLA PARA RETORNAR AO MENU ANTERIOR\n############################################################\n");
         return;
@@ -155,7 +155,7 @@ void GeraEncaminhamento(tSade* sade, tPessoa* paciente, tPessoa* medico, char* d
     scanf("%[^\n]%*c", especialidade);
     printf("MOTIVO: ");
     scanf("%[^\n]%*c", motivo);
-    
+
     tEncaminhamento* encaminhamento = criaEncaminhamento(RetornaNomePessoa(paciente), RetornaCPFPessoa(paciente), especialidade, motivo, RetornaNomePessoa(medico), RetornaCRMMedico(medico), dataStr);
    
     insereDocumentoFila(RetornaFilaSADE(sade), encaminhamento, imprimeNaTelaEncaminhamento, imprimeEmArquivoEncaminhamento, desalocaEncaminhamento);

@@ -9,8 +9,6 @@ typedef struct tLesao tLesao;
 
 tLesao* CriaLesao(int qtdLesoes);
 
-void AdicionaLesao(tLesao* lesao, tLesao **lesoes, int qtdLesoes);
-
 void ImprimeLesao(tLesao* lesao);
 
 void ImprimeLesaoArquivo(FILE* arquivo, tLesao* lesao);
@@ -20,10 +18,6 @@ void ImprimeVetorLesoes(tLesao** lesoes, int qntdLesoes);
 int RetornaCirurgia(tLesao* lesao);
 
 int RetornaCrioterapia(tLesao* lesao);
-
-int RetornaQtdLesoesParaCirurgia(tLesao** lesoes, int qntdLesoes);
-
-int RetornaQtdLesoesParaCrioterapia(tLesao** lesoes, int qntdLesoes);
 
 int RetornaTamanhoLesao(tLesao* lesao);
 

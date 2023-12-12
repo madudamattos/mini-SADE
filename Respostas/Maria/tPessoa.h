@@ -43,6 +43,10 @@ char* RetornaCPFPessoa(tPessoa*);
 
 char* RetornaCRMMedico(tPessoa*);
 
+char* RetornaLoginPessoa(tPessoa* p);
+
+char* RetornaSenhaPessoa(tPessoa* p);
+
 NIVELACESSO RetornaNivelAcessoPessoa(tPessoa* p);
 
 char* RetornaNomePessoa(tPessoa*);
@@ -52,6 +56,8 @@ char* RetornaDataNascimetoPessoa(tPessoa*);
 int RetornaQtdLesoesPaciente(tPessoa* p);
 
 tLesao** RetornaLesoesPaciente(tPessoa* p);
+
+int RetornaIdadePessoa(tPessoa* p);
 
 void SetaPacienteParaDiabetico(tPessoa* p);
 
@@ -70,5 +76,15 @@ ATOR RetornaClasseAtor(tPessoa* p);
 NIVELACESSO ConverteStringNivelAcesso(const char nivelAcessoStr[]);
 
 void ImprimePessoa(tPessoa* p);
+
+int RetornaSomaTamanhoLesoesPessoa(tPessoa* p);
+
+int RetornaQtdLesoesParaCirurgia(tPessoa* p);
+
+int RetornaQtdLesoesParaCrioterapia(tPessoa* p);
+
+char* RetornaGeneroPessoa(tPessoa* p);
+
+void AdicionaLesao(tLesao* lesao, tPessoa* p);
 
 #endif

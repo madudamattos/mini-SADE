@@ -3,6 +3,7 @@
 #include <string.h>
 #include "tBiopsia.h"
 #include "tLesao.h"
+#include "tPessoa.h"
 
 struct tBiopsia{
     char nomePaciente[100];
@@ -17,32 +18,31 @@ struct tBiopsia{
 tBiopsia *CriaBiopsia(char *nomePaciente, char *CPF,
                       tLesao** lesoes, int qntdLesoes,
                       char *nomeMedico, char *CRM, char *dataStr){
-    printf("b\n");
     tBiopsia *biopsia = (tBiopsia *)calloc(1, sizeof(tBiopsia));
-    printf("C\n");
 
     strncpy(biopsia->nomePaciente, nomePaciente, sizeof(biopsia->nomePaciente) - 1);
     strncpy(biopsia->CPF, CPF, sizeof(biopsia->CPF) - 1);
     strncpy(biopsia->nomeMedico, nomeMedico, sizeof(biopsia->nomeMedico) - 1);
     strncpy(biopsia->CRM, CRM, sizeof(biopsia->CRM) - 1);
     strncpy(biopsia->dataStr, dataStr, sizeof(biopsia->dataStr) - 1);
-    printf("d\n");
 
     biopsia->qntdLesoes = qntdLesoes;
     biopsia->lesoes = (tLesao **)calloc(qntdLesoes, sizeof(tLesao *));
-    printf("e\n");
+
     biopsia->lesoes = ClonaVetorLesoes(lesoes, qntdLesoes);
-    printf("f\n");
-    RetornaQtdLesoesParaCirurgia(biopsia->lesoes, biopsia->qntdLesoes);
-    printf("g\n");
 
-    printf("vetor lesoes: "); 
-    ImprimeVetorLesoes(biopsia->lesoes, biopsia->qntdLesoes);
+    int qtdLesoesParaCirurgia = 0;
 
-    if(RetornaQtdLesoesParaCirurgia(biopsia->lesoes, biopsia->qntdLesoes) <= 0){
+    for(int i=0; i<biopsia->qntdLesoes; i++){
+        if(RetornaCirurgia(biopsia->lesoes[i])){
+            qtdLesoesParaCirurgia++;
+        }
+    }
+
+    if(qtdLesoesParaCirurgia <= 0){
         return NULL;
     }
-    printf("h\n");
+
     return biopsia;
 }
 
@@ -94,39 +94,30 @@ void ImprimeNaTelaBiopsia(void *dado){
  * O nome do arquivo e a maneira de escrita é definido dentro da função
  */
 void ImprimeEmArquivoBiopsia(void *dado, char *path){
-    if(dado == NULL){
-        printf("não foi possivel imprimir a biopsia em arquivo\n");
-        return;
-    }
+    FILE *pBiopsia = NULL;
+    char caminho[100];
 
-    if(dado != NULL){
-        char caminhoArquivo[100];
-        FILE *pArquivo = NULL;
+    sprintf(caminho, "%s/%s", path, NOME_ARQUIVO_BIOPSIA);
 
-        sprintf(caminhoArquivo, "%s/%s", path, NOME_ARQUIVO_BIOPSIA);
-
-        pArquivo = fopen(caminhoArquivo, "a");
+    pBiopsia = fopen(caminho, "a");
     
-        if (pArquivo == NULL) {
-            printf("Não foi possível abrir o arquivo\n");
-            exit(1);
-        }
-
+    if(dado != NULL){
         tBiopsia *biopsia = (tBiopsia *)dado;
-
-        fprintf(pArquivo,"PACIENTE: %s\n", biopsia->nomePaciente);
-        fprintf(pArquivo,"CPF: %s\n\n", biopsia->CPF);
-        fprintf(pArquivo,"SOLICITACAO DE BIOPSIA PARA AS LESOES:\n");
+        fprintf(pBiopsia, "PACIENTE: %s\n", biopsia->nomePaciente);
+        fprintf(pBiopsia, "NOME: %s\n\n", biopsia->nomePaciente);
         
+        fprintf(pBiopsia, "SOLICITACAO DE BIOPSIA PARA AS LESOES:\n");
+
         for(int i=0; i<biopsia->qntdLesoes; i++){
             if(RetornaCirurgia(biopsia->lesoes[i])){
-                ImprimeLesaoArquivo(pArquivo, biopsia->lesoes[i]);
+                ImprimeLesaoArquivo(pBiopsia, biopsia->lesoes[i]);
             }
         }
 
-        fprintf(pArquivo,"%s (%s)\n", biopsia->nomeMedico, biopsia->CRM);
+        fprintf(pBiopsia, "%s (%s)\n", biopsia->nomeMedico, biopsia->CRM);
 
-        fprintf(pArquivo,"%s\n", biopsia->dataStr);
-        }
+        fprintf(pBiopsia, "%s\n\n", biopsia->dataStr);
+    }
 
+    fclose(pBiopsia);
 }

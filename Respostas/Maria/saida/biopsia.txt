@@ -1,0 +1,16 @@
+PACIENTE: maria
+NOME: maria
+
+SOLICITACAO DE BIOPSIA PARA AS LESOES:
+L1 - ajsfdk - safd - 30MM
+a (a)
+a
+
+PACIENTE: maria
+NOME: maria
+
+SOLICITACAO DE BIOPSIA PARA AS LESOES:
+L1 - ajsfdk - safd - 30MM
+a (a)
+a
+
