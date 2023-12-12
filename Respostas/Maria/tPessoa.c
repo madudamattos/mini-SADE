@@ -9,7 +9,7 @@ struct tPessoa{
     ATOR classeAtor;
     NIVELACESSO nivelAcesso;
     char nome[100];
-    char cpf[12];
+    char cpf[15];
     char dataNascimento[13];
     char telefone[15];
     char genero[10];
@@ -26,8 +26,8 @@ struct tPessoa{
 };
 
 tPessoa* CriaPessoa(){
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
+    // int c;
+    // while ((c = getchar()) != '\n' && c != EOF);
 
     tPessoa* p = (tPessoa*) calloc(1, sizeof(tPessoa));
 
@@ -73,10 +73,9 @@ tPessoa* CadastraSecretario(){
     secretario->nivelAcesso = ConverteStringNivelAcesso(acesso);
 
     secretario->CRM[0] = '\0';
+    secretario->nome[0] = '\0';
     
     CadastroRealizado();
-
-    scanf("%*c");
 
     return secretario;
 }
@@ -330,7 +329,5 @@ void AdicionaLesao(tLesao* lesao, tPessoa* p){
     p->lesoes = realloc(p->lesoes, (p->qntdLesoes)*sizeof(tLesao*));
     p->lesoes[(p->qntdLesoes)-1] = lesao;
 
-    printf("LESAO REGISTRADA COM SUCESSO. PRESSIONE QUALQUER TECLA PARA RETORNAR AO MENU ANTERIOR\n############################################################\n");
-
-    scanf("%*c");
+    printf("\nLESAO REGISTRADA COM SUCESSO. PRESSIONE QUALQUER TECLA PARA RETORNAR AO MENU ANTERIOR\n############################################################\n");
 }

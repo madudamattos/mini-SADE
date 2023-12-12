@@ -33,7 +33,7 @@ tSade* CriaSADE(){
     sade->medicos = NULL;
     sade->secretarios = NULL;
     sade->usuarioLogado = NULL;
-    sade->primeiroUso = 0;
+    sade->primeiroUso = 1;
 
     sade->fila = criaFila();
 
@@ -44,8 +44,8 @@ void InicializaSADE(tSade* sade, char* caminhoBancoDados){
     //LE O BANCO DE DADOS ------------------------------------
     printf("################################################\nDIGITE O CAMINHO DO BANCO DE DADOS:");
     // lê o caminho do banco de dados
-    //scanf("%[^\n]%*c", caminhoBancoDados);
-    caminhoBancoDados = "/home/madudamattos/prog2/2_trabalho/Respostas/Maria/Banco";
+    scanf("%[^\n]%*c", caminhoBancoDados);
+    //caminhoBancoDados = "/home/madudamattos/prog2/2_trabalho/Respostas/Maria/Banco";
 
     printf("################################################\n");
 
@@ -86,15 +86,15 @@ void ExecutaSADE(tSade* sade, char *caminhoPastaSaida){
     char c;
     NIVELACESSO acesso;
     
+    //EM CASO DE PRIMEIRO USO CADASTRA SECRETARIO
     if(sade->primeiroUso == 1){
-        AddSecretarioSADE(sade);
+        sade->qtdSecretarios++;
+        sade->secretarios = realloc(sade->secretarios, sizeof(tPessoa *) * sade->qtdSecretarios); 
+        sade->secretarios[sade->qtdSecretarios-1] = CadastraSecretario();
         sade->usuarioLogado = sade->secretarios[0];
     }
-    else{
-        //while(sade->usuarioLogado == NULL){
-            sade->usuarioLogado = RealizaLogin(sade);
-        //}
-    }
+    
+    sade->usuarioLogado = RealizaLogin(sade);
 
     acesso = RetornaNivelAcessoPessoa(sade->usuarioLogado);
     
@@ -104,7 +104,7 @@ void ExecutaSADE(tSade* sade, char *caminhoPastaSaida){
     switch (acesso){
     case ADMIN:
         while(opcao != 8){
-            while(c=getchar() != '\n' && c != EOF);
+            //while(c=getchar() != '\n' && c != EOF);
             MenuPrincipalAdmin();
         
             scanf("%d", &opcao);
@@ -138,7 +138,7 @@ void ExecutaSADE(tSade* sade, char *caminhoPastaSaida){
         
     case MED:
         while(opcao != 8){
-            while(c=getchar() != '\n' && c != EOF);
+            //while(c=getchar() != '\n' && c != EOF);
             MenuPrincipalMedico();
 
             scanf("%d", &opcao);
@@ -266,9 +266,13 @@ void AddSecretarioSADE(tSade* sade){
     
     sade->secretarios[sade->qtdSecretarios-1] = CadastraSecretario();
 
+    scanf("%*c");
 }
 
 void AddMedicoSADE(tSade* sade){
+    int c;
+    while(c=getchar() != '\n' && c != EOF);
+
     sade->qtdMedicos++;
 
     sade->medicos = realloc(sade->medicos, sizeof(tPessoa *) * sade->qtdMedicos);
@@ -277,6 +281,9 @@ void AddMedicoSADE(tSade* sade){
 }
 
 void AddPacienteSADE(tSade* sade){
+    int c;
+    while(c=getchar() != '\n' && c != EOF);
+
     sade->qtdPacientes++;
 
     sade->pacientes = realloc(sade->pacientes, sizeof(tPessoa *) * sade->qtdPacientes);

@@ -91,7 +91,9 @@ void CadastraLesao(tPessoa* paciente){
     while ((c = getchar()) != '\n' && c != EOF);
     AumentaQtdLesoesPaciente(paciente);
     tLesao* lesao = CriaLesao(RetornaQtdLesoesPaciente(paciente));
-    AdicionaLesao(lesao, paciente);    
+    AdicionaLesao(lesao, paciente);
+    while ((c = getchar()) != '\n' && c != EOF);    
+    scanf("%*c");
 }
 
 void GeraReceita(tSade* sade, tPessoa* paciente, tPessoa* medico, char* dataStr){
@@ -116,7 +118,14 @@ void GeraReceita(tSade* sade, tPessoa* paciente, tPessoa* medico, char* dataStr)
     if (strcmp(Uso, "ORAL") == 0) tipoUso = ORAL;
     else if (strcmp(Uso, "TOPICO") == 0) tipoUso = TOPICO;
     
-    tReceita* receita = criaReceita(RetornaNomePessoa(paciente), tipoUso, nomeMedicamento, tipoMedicamento, instrucoes, qtd, RetornaNomePessoa(medico), RetornaCRMMedico(medico), dataStr);
+    tReceita* receita = NULL;
+
+    if(RetornaNivelAcessoPessoa(medico) == ADMIN){
+        receita = criaReceita(RetornaNomePessoa(paciente), tipoUso, nomeMedicamento, tipoMedicamento, instrucoes, qtd, "\0", "\0", dataStr);
+    }
+    else{
+        receita = criaReceita(RetornaNomePessoa(paciente), tipoUso, nomeMedicamento, tipoMedicamento, instrucoes, qtd, RetornaNomePessoa(medico), RetornaCRMMedico(medico), dataStr);
+    }
 
     insereDocumentoFila(RetornaFilaSADE(sade), receita, imprimeNaTelaReceita, imprimeEmArquivoReceita, desalocaReceita);
     
@@ -131,7 +140,14 @@ void SolicitaBiopsia(tSade* sade, tPessoa* pessoa, tPessoa* medico, char* dataSt
     int qtdLesoes = RetornaQtdLesoesPaciente(pessoa);
     tLesao** lesoes = RetornaLesoesPaciente(pessoa);
     
-    tBiopsia* biopsia = CriaBiopsia(RetornaNomePessoa(pessoa), RetornaCPFPessoa(pessoa), lesoes, qtdLesoes, RetornaNomePessoa(medico), RetornaCRMMedico(medico), dataStr);
+    tBiopsia* biopsia = NULL;
+
+    if(RetornaNivelAcessoPessoa(medico) == ADMIN){
+        biopsia = CriaBiopsia(RetornaNomePessoa(pessoa), RetornaCPFPessoa(pessoa), lesoes, qtdLesoes, "\0", "\0", dataStr);
+    }
+    else{
+        biopsia = CriaBiopsia(RetornaNomePessoa(pessoa), RetornaCPFPessoa(pessoa), lesoes, qtdLesoes, RetornaNomePessoa(medico), RetornaCRMMedico(medico), dataStr);
+    }
 
     if(biopsia == NULL){
         printf("#################### CONSULTA MEDICA #######################\nNAO E POSSIVEL SOLICITAR BIOPSIA SEM LESAO CIRURGICA. PRESSIONE QUALQUER TECLA PARA RETORNAR AO MENU ANTERIOR\n############################################################\n");
@@ -156,7 +172,14 @@ void GeraEncaminhamento(tSade* sade, tPessoa* paciente, tPessoa* medico, char* d
     printf("MOTIVO: ");
     scanf("%[^\n]%*c", motivo);
 
-    tEncaminhamento* encaminhamento = criaEncaminhamento(RetornaNomePessoa(paciente), RetornaCPFPessoa(paciente), especialidade, motivo, RetornaNomePessoa(medico), RetornaCRMMedico(medico), dataStr);
+    tEncaminhamento* encaminhamento = NULL;
+
+    if(RetornaNivelAcessoPessoa(medico) == ADMIN){
+        encaminhamento = criaEncaminhamento(RetornaNomePessoa(paciente), RetornaCPFPessoa(paciente), especialidade, motivo, "\0", "\0", dataStr);
+    }
+    else{
+        encaminhamento = criaEncaminhamento(RetornaNomePessoa(paciente), RetornaCPFPessoa(paciente), especialidade, motivo, RetornaNomePessoa(medico), RetornaCRMMedico(medico), dataStr);
+    }
    
     insereDocumentoFila(RetornaFilaSADE(sade), encaminhamento, imprimeNaTelaEncaminhamento, imprimeEmArquivoEncaminhamento, desalocaEncaminhamento);
 
