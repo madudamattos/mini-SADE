@@ -17,11 +17,13 @@ int main(int argc, char *argv[]){
 
     sprintf(caminhoPastaSaida, "%s/saida/", caminhoConfig);
 
+    printf("%s", caminhoPastaSaida);
+
     tSade* sade = CriaSADE();
 
     InicializaSADE(sade, caminhoBancoDados);
 
-    ExecutaSADE(sade, caminhoBancoDados);
+    ExecutaSADE(sade, caminhoPastaSaida);
 
     FinalizaSADE(sade, caminhoBancoDados);
 

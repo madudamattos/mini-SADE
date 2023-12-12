@@ -76,8 +76,6 @@ void imprimeEmArquivoReceita(void *dado, char *path){
 
     pReceita = fopen(caminho, "a");
     
-
-
     if(dado != NULL){
         tReceita *receita = (tReceita *)dado;
         fprintf(pReceita, "RECEITUARIO\n");

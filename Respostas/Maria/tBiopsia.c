@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "tBiopsia.h"
+#include "tLesao.h"
 
 struct tBiopsia{
     char nomePaciente[100];
@@ -13,56 +14,35 @@ struct tBiopsia{
     char dataStr[13];
 };
 
-struct tLesao{
-    char rotulo[3];
-    char diagnostico[50];
-    char regiao[50];
-    int tamanho;
-    int cirurgia;
-    int crioterapia;
-};
-
-tLesao** ClonaLesoes(tLesao** lesoes, int qtdLesoes){
-    return NULL;
-}
-
-tBiopsia *criaBiopsia(char *nomePaciente, char *CPF,
+tBiopsia *CriaBiopsia(char *nomePaciente, char *CPF,
                       tLesao** lesoes, int qntdLesoes,
                       char *nomeMedico, char *CRM, char *dataStr){
-    
+    printf("b\n");
     tBiopsia *biopsia = (tBiopsia *)calloc(1, sizeof(tBiopsia));
+    printf("C\n");
 
     strncpy(biopsia->nomePaciente, nomePaciente, sizeof(biopsia->nomePaciente) - 1);
     strncpy(biopsia->CPF, CPF, sizeof(biopsia->CPF) - 1);
     strncpy(biopsia->nomeMedico, nomeMedico, sizeof(biopsia->nomeMedico) - 1);
     strncpy(biopsia->CRM, CRM, sizeof(biopsia->CRM) - 1);
     strncpy(biopsia->dataStr, dataStr, sizeof(biopsia->dataStr) - 1);
-    
+    printf("d\n");
+
     biopsia->qntdLesoes = qntdLesoes;
     biopsia->lesoes = (tLesao **)calloc(qntdLesoes, sizeof(tLesao *));
+    printf("e\n");
+    biopsia->lesoes = ClonaVetorLesoes(lesoes, qntdLesoes);
+    printf("f\n");
+    RetornaQtdLesoesParaCirurgia(biopsia->lesoes, biopsia->qntdLesoes);
+    printf("g\n");
 
-    for(int i=0; i<biopsia->qntdLesoes; i++){
-        biopsia->lesoes[i] = (tLesao *)calloc(1, sizeof(tLesao));
-        strncpy(biopsia->lesoes[i]->rotulo, lesoes[i]->rotulo, 3*sizeof(char));
-        strncpy(biopsia->lesoes[i]->diagnostico, lesoes[i]->diagnostico, 50*sizeof(char));
-        strncpy(biopsia->lesoes[i]->regiao, lesoes[i]->regiao, 50*sizeof(char));
-        biopsia->lesoes[i]->tamanho = lesoes[i]->tamanho;
-        biopsia->lesoes[i]->cirurgia = lesoes[i]->cirurgia;
-        biopsia->lesoes[i]->crioterapia = lesoes[i]->crioterapia;
-    }
+    printf("vetor lesoes: "); 
+    ImprimeVetorLesoes(biopsia->lesoes, biopsia->qntdLesoes);
 
-    int flag = -1;
-    for(int i=0; i<biopsia->qntdLesoes; i++){
-        if(biopsia->lesoes[i]->cirurgia == 1){
-            flag = 0;
-        }
-    }
-
-    if(flag == -1){
-        printf("Não há lesões para biópsia\n");
+    if(RetornaQtdLesoesParaCirurgia(biopsia->lesoes, biopsia->qntdLesoes) <= 0){
         return NULL;
     }
-
+    printf("h\n");
     return biopsia;
 }
 
@@ -70,12 +50,10 @@ tBiopsia *criaBiopsia(char *nomePaciente, char *CPF,
  * Função que recebe o ponteiro genérico (que deve conter uma biopsia) e o desaloca da memória.
  * Essa função primeiro verifica se o ponteiro é NULL antes de desalocar.
  */
-void desalocaBiopsia(void *dado){
+void DesalocaBiopsia(void *dado){
     if(dado != NULL){
         tBiopsia *biopsia = (tBiopsia *)dado;
-        for(int i=0; i<biopsia->qntdLesoes; i++){
-            free(biopsia->lesoes[i]);
-        }
+        DesalocaLesoes(biopsia->lesoes, biopsia->qntdLesoes);
         free(biopsia);
     }
 }
@@ -84,7 +62,7 @@ void desalocaBiopsia(void *dado){
  * Função que recebe um ponteiro genérico (que deve conter uma biopsia) e imprime os dados na tela
  * de acordo com o especificado na descrição do trabalho.
  */
-void imprimeNaTelaBiopsia(void *dado){
+void ImprimeNaTelaBiopsia(void *dado){
     if(dado == NULL){
         printf("não foi possivel imprimir a biopsia\n");
         exit(1);
@@ -95,12 +73,11 @@ void imprimeNaTelaBiopsia(void *dado){
     printf("PACIENTE: %s\n", biopsia->nomePaciente);
     printf("CPF: %s\n\n", biopsia->CPF);
     printf("SOLICITACAO DE BIOPSIA PARA AS LESOES:\n");
+    
     for(int i=0; i<biopsia->qntdLesoes; i++){
-
-        if(biopsia->lesoes[i]->cirurgia == 1){
-           printf("%s - %s - %s - %dMM\n\n", biopsia->lesoes[i]->rotulo, biopsia->lesoes[i]->diagnostico, biopsia->lesoes[i]->regiao, biopsia->lesoes[i]->tamanho); 
+        if(RetornaCirurgia(biopsia->lesoes[i])){
+            ImprimeLesao(biopsia->lesoes[i]);
         }
-        
     }
 
     printf("%s (%s)\n", biopsia->nomeMedico, biopsia->CRM);
@@ -116,7 +93,7 @@ void imprimeNaTelaBiopsia(void *dado){
  * Ex: /home/usuario/Documentos
  * O nome do arquivo e a maneira de escrita é definido dentro da função
  */
-void imprimeEmArquivoBiopsia(void *dado, char *path){
+void ImprimeEmArquivoBiopsia(void *dado, char *path){
     if(dado == NULL){
         printf("não foi possivel imprimir a biopsia em arquivo\n");
         return;
@@ -128,7 +105,7 @@ void imprimeEmArquivoBiopsia(void *dado, char *path){
 
         sprintf(caminhoArquivo, "%s/%s", path, NOME_ARQUIVO_BIOPSIA);
 
-        pArquivo = fopen(caminhoArquivo, "wb");
+        pArquivo = fopen(caminhoArquivo, "a");
     
         if (pArquivo == NULL) {
             printf("Não foi possível abrir o arquivo\n");
@@ -137,20 +114,19 @@ void imprimeEmArquivoBiopsia(void *dado, char *path){
 
         tBiopsia *biopsia = (tBiopsia *)dado;
 
-        fwrite(biopsia, sizeof(tBiopsia), 1, pArquivo);
-
-        for(int i=0; i<biopsia->qntdLesoes; i++){
-            fwrite(biopsia->lesoes[i], sizeof(tLesao), 1, pArquivo);
-        }
+        fprintf(pArquivo,"PACIENTE: %s\n", biopsia->nomePaciente);
+        fprintf(pArquivo,"CPF: %s\n\n", biopsia->CPF);
+        fprintf(pArquivo,"SOLICITACAO DE BIOPSIA PARA AS LESOES:\n");
         
-        fclose(pArquivo);
-    }
+        for(int i=0; i<biopsia->qntdLesoes; i++){
+            if(RetornaCirurgia(biopsia->lesoes[i])){
+                ImprimeLesaoArquivo(pArquivo, biopsia->lesoes[i]);
+            }
+        }
 
-}
+        fprintf(pArquivo,"%s (%s)\n", biopsia->nomeMedico, biopsia->CRM);
 
-void DesalocaLesoes(tLesao** lesoes, int qntdLesoes){
-    for(int i=0; i<qntdLesoes; i++){
-        free(lesoes[i]);
-    }
-    free(lesoes);
+        fprintf(pArquivo,"%s\n", biopsia->dataStr);
+        }
+
 }

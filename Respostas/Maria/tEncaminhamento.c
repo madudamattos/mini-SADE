@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "tBiopsia.h"
+
 #include "tEncaminhamento.h"
 
 struct tEncaminhamento{
@@ -48,31 +49,37 @@ void imprimeNaTelaEncaminhamento(void *dado){
         printf("ESPECIALIDADE ENCAMINHADA: %s\n\n", e->nomeEspecialidade);
         printf("MOTIVO: %s\n\n", e->motivo);
         printf("%s (%s)\n", e->nomeMedico, e->CRM);
-        printf("%s\n", e->dataStr);
+        printf("%s\n\n", e->dataStr);
     
     }
 }
 
 void imprimeEmArquivoEncaminhamento(void *dado, char *path){
+    FILE *pEncaminhamento = NULL;
+    char caminho[100];
 
-    if(dado != NULL){
-        char caminhoArquivo[100];
-        FILE *pArquivo = NULL;
+    sprintf(caminho, "%s/%s", path, NOME_ARQUIVO_ENCAMINHAMENTO);
 
-        sprintf(caminhoArquivo, "%s/%s", path, NOME_ARQUIVO_ENCAMINHAMENTO);
+    pEncaminhamento = fopen(caminho, "a");
 
-        pArquivo = fopen(caminhoArquivo, "wb");
-    
-        if (pArquivo == NULL) {
-            printf("Não foi possível abrir o arquivo\n");
-            exit(1);
-        }
-
-        tEncaminhamento *encaminhamento = (tEncaminhamento *)dado;
-
-        fwrite(encaminhamento, sizeof(tEncaminhamento), 1, pArquivo);
-        
-        fclose(pArquivo);
+    if(pEncaminhamento == NULL){
+        printf("ERRO: Não foi possível abrir o arquivo de encaminhamento\n");
+        return;
     }
+    
+    if(dado != NULL){
+        tEncaminhamento *e = (tEncaminhamento *)dado;
+
+        fprintf(pEncaminhamento, "PACIENTE: %s\n", e->nomePaciente);
+        fprintf(pEncaminhamento, "CPF: %s\n\n", e->CPF);
+        fprintf(pEncaminhamento, "ESPECIALIDADE ENCAMINHADA: %s\n", e->nomeEspecialidade);
+        fprintf(pEncaminhamento, "MOTIVO: %s\n\n", e->motivo);
+        fprintf(pEncaminhamento, "%s (%s)\n", e->nomeMedico, e->CRM);
+
+        fprintf(pEncaminhamento, "%s\n\n", e->dataStr);
+    }
+
+    fclose(pEncaminhamento);
+
 
 }

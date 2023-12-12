@@ -6,6 +6,7 @@
 #include <string.h>
 #include "tPessoa.h"
 #include "tBusca.h"
+#include "tFila.h"
 
 typedef struct tSade tSade;
 
@@ -17,7 +18,17 @@ void ExecutaSADE(tSade* sade, char *caminhoBancoDados);
 
 void FinalizaSADE(tSade* sade, char *caminhoBancoDados);
 
-int RealizaLogin(char *caminhoBancaDados);
+tFila* RetornaFilaSADE(tSade* sade);
+
+tPessoa* RetornaUsuarioLogado(tSade* sade);
+
+tPessoa* LocalizaPacienteCPF(tSade* sade, char cpf[]);
+
+tPessoa* LocalizaSecretarioCPF(tSade* sade, char cpf[]);
+
+tPessoa* LocalizaMedicoCPF(tSade* sade, char cpf[]);
+
+int RealizaLogin(tSade* sade);
 
 void AddSecretarioSADE(tSade* sade);
 
@@ -26,6 +37,8 @@ void AddMedicoSADE(tSade* sade);
 void AddPacienteSADE(tSade* sade);
 
 void BuscaPacientes(tSade* sade);
+
+void ExecutaFilaImpressao(tSade* sade, char *caminhoPastaSaida);
 
 int fileExists(const char * filename);
 

@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "tBiopsia.h"
+#include "tLesao.h"
 
 typedef enum{
     PACIENTE,
@@ -49,6 +49,9 @@ char* RetornaNomePessoa(tPessoa*);
 
 char* RetornaDataNascimetoPessoa(tPessoa*);
 
+int RetornaQtdLesoesPaciente(tPessoa* p);
+
+tLesao** RetornaLesoesPaciente(tPessoa* p);
 
 void SetaPacienteParaDiabetico(tPessoa* p);
 
@@ -59,6 +62,8 @@ void SetaPacienteParaAlergico(tPessoa* p);
 void SetaPacienteParaHistoricoCancer(tPessoa* p);
 
 void SetaPacienteTipoPele(tPessoa* p, char tipoPele[]);
+
+void AumentaQtdLesoesPaciente(tPessoa* p);
 
 ATOR RetornaClasseAtor(tPessoa* p);
 

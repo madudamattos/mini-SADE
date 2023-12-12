@@ -20,7 +20,7 @@ struct tPessoa{
     int fumante;
     int alergias;
     int histCancer;
-    char tipoPele[3];
+    char tipoPele[4];
     int qntdLesoes;
     tLesao** lesoes;
 };
@@ -64,11 +64,11 @@ tPessoa* CadastraSecretario(){
 
     secretario->classeAtor = SECRETARIO;
 
-    printf("NOME DE USUARIO:");
+    printf("NOME DE USUARIO: ");
     scanf("%[^\n]%*c", secretario->user);
-    printf("SENHA:");
+    printf("SENHA: ");
     scanf("%[^\n]%*c", secretario->senha);
-    printf("NIVEL DE ACESSO:");
+    printf("NIVEL DE ACESSO: ");
     scanf("%[^\n]%*c", acesso);
     secretario->nivelAcesso = ConverteStringNivelAcesso(acesso);
     
@@ -87,11 +87,11 @@ tPessoa* CadastraMedico(){
     medico->classeAtor = MEDICO;
     medico->nivelAcesso = MED;
 
-    printf("CRM");
+    printf("CRM: ");
     scanf("%[^\n]%*c", medico->CRM);
-    printf("NOME DE USUARIO:");
+    printf("NOME DE USUARIO: ");
     scanf("%[^\n]%*c", medico->user);
-    printf("SENHA:");
+    printf("SENHA: ");
     scanf("%[^\n]%*c", medico->senha);
 
     CadastroRealizado();
@@ -149,7 +149,7 @@ tPessoa* ClonaPessoa(tPessoa*p){
     clone->qntdLesoes = p->qntdLesoes;
 
     if(p->lesoes != NULL){
-        clone->lesoes = ClonaLesoes(p->lesoes, p->qntdLesoes);
+        clone->lesoes = ClonaVetorLesoes(p->lesoes, p->qntdLesoes);
     }
     else{
         clone->lesoes = NULL;
@@ -188,6 +188,14 @@ char* RetornaDataNascimetoPessoa(tPessoa* p){
     return p->dataNascimento;
 }
 
+int RetornaQtdLesoesPaciente(tPessoa* p){
+    return p->qntdLesoes;
+}
+
+tLesao** RetornaLesoesPaciente(tPessoa* p){
+    return p->lesoes;
+}
+
 void SetaPacienteParaDiabetico(tPessoa* p){
     if(p != NULL){
         p->diabetes = 1;
@@ -215,6 +223,12 @@ void SetaPacienteParaHistoricoCancer(tPessoa* p){
 void SetaPacienteTipoPele(tPessoa* p, char tipoPele[]){
     if(p != NULL){
         strcpy(p->tipoPele, tipoPele);
+    }
+}
+
+void AumentaQtdLesoesPaciente(tPessoa* p){
+    if(p != NULL){
+        p->qntdLesoes++;
     }
 }
 

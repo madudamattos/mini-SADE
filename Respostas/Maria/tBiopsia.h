@@ -4,10 +4,9 @@
 #define MAX_TAM_NOME_LESAO 50
 #define NOME_ARQUIVO_BIOPSIA "biopsia.txt"
 
-typedef struct tBiopsia tBiopsia;
-typedef struct tLesao tLesao;
+#include "tLesao.h"
 
-tLesao** ClonaLesoes(tLesao** lesoes, int qtdLesoes);
+typedef struct tBiopsia tBiopsia;
 
 /**
  * Função que recebe todas as informações pertinentes a uma Biopsia e retorna
@@ -15,8 +14,7 @@ tLesao** ClonaLesoes(tLesao** lesoes, int qtdLesoes);
  *
  */
 
-
-tBiopsia *criaBiopsia(char *nomePaciente, char *CPF,
+tBiopsia *CriaBiopsia(char *nomePaciente, char *CPF,
                       tLesao** lesoes, int qntdLesoes,
                       char *nomeMedico, char *CRM, char *dataStr);
 
@@ -24,13 +22,13 @@ tBiopsia *criaBiopsia(char *nomePaciente, char *CPF,
  * Função que recebe o ponteiro genérico (que deve conter uma Biopsia) e o desaloca da memória.
  * Essa função primeiro verifica se o ponteiro é NULL antes de desalocar.
  */
-void desalocaBiopsia(void *dado);
+void DesalocaBiopsia(void *dado);
 
 /**
  * Função que recebe um ponteiro genérico (que deve conter uma Biopsia) e imprime os dados na tela
  * de acordo com o especificado na descrição do trabalho.
  */
-void imprimeNaTelaBiopsia(void *dado);
+void ImprimeNaTelaBiopsia(void *dado);
 
 void DesalocaLesoes(tLesao** lesoes, int qntdLesoes);
 /**
@@ -40,6 +38,6 @@ void DesalocaLesoes(tLesao** lesoes, int qntdLesoes);
  * Ex: /home/usuario/Documentos
  * O nome do arquivo e a maneira de escrita é definido dentro da função
  */
-void imprimeEmArquivoBiopsia(void *dado, char *path);
+void ImprimeEmArquivoBiopsia(void *dado, char *path);
 
 #endif
