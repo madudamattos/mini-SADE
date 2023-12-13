@@ -99,4 +99,6 @@ void LeBinarioPessoa(FILE* arquivo, tPessoa* p);
 
 void LeBinarioPaciente(FILE* arquivo, tPessoa* p);
 
+void LeBinarioLesoesPessoa(FILE* arquivo, tPessoa* p);
+
 #endif

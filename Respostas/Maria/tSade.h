@@ -59,6 +59,8 @@ void LeBinarioSecretarios(tSade* sade, char* caminhoBancoDados);
 
 void LeBinarioMedicos(tSade* sade, char* caminhoBancoDados);
 
+void LeBinarioLesoes(tSade* sade, char* caminhoBancoDados);
+
 void CriaLesoesSade(tSade* sade);
 
 #endif

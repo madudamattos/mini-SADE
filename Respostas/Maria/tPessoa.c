@@ -368,10 +368,20 @@ void EscreveBinarioPessoa(FILE* arquivo, tPessoa* p){
 }
 
 void EscreveBinarioLesoesPessoa(FILE* arquivo, tPessoa* p){
-    for(int i=0; i<p->qntdLesoes; i++){
-        EscreveBinarioLesao(arquivo, p->lesoes[i]);
+    if(p->lesoes != NULL){
+        for(int i=0; i<p->qntdLesoes; i++){
+            EscreveBinarioLesao(arquivo, p->lesoes[i]);
+        }
     }
 }
+
+// void LeBinarioLesoesPessoa(FILE* arquivo, tPessoa* p){
+//     if(p->lesoes != NULL){
+//         for(int i=0; i<p->qntdLesoes; i++){
+//             LeBinarioLesao(arquivo, p->lesoes[i]);
+//         }
+//     }
+// }
 
 void LeBinarioPessoa(FILE* arquivo, tPessoa* p){
     fread(p, sizeof(tPessoa), 1, arquivo);
