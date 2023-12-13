@@ -27,7 +27,6 @@ tBiopsia *CriaBiopsia(char *nomePaciente, char *CPF,
     strncpy(biopsia->dataStr, dataStr, sizeof(biopsia->dataStr) - 1);
 
     biopsia->qntdLesoes = qntdLesoes;
-    biopsia->lesoes = (tLesao **)calloc(qntdLesoes, sizeof(tLesao *));
 
     biopsia->lesoes = ClonaVetorLesoes(lesoes, qntdLesoes);
 

@@ -370,7 +370,7 @@ void ExibeRelatorioGeral(tSade* sade){
     int totalCirurgias = 0;
     int totalCrioterapias = 0;
     int totalPacientesAtendidos = 0;
-    char *genero = (char*) calloc(10, sizeof(char));
+    char genero[20];
 
     for(int i=0; i<sade->qtdPacientes; i++){
     
@@ -387,7 +387,7 @@ void ExibeRelatorioGeral(tSade* sade){
         
         mediaIdade += RetornaIdadePessoa(sade->pacientes[i]);
 
-        genero = RetornaGeneroPessoa(sade->pacientes[i]);
+        strcpy(genero, RetornaGeneroPessoa(sade->pacientes[i]));
 
         if(strcmp(genero, "FEMININO") == 0) totalFeminino++;
         else if(strcmp(genero, "MASCULINO") == 0) totalMasculino++;
@@ -421,7 +421,9 @@ void ExibeRelatorioGeral(tSade* sade){
         scanf("%*c");
     }
 
-    free(genero);
+    //DesalocaRelatorio(relatorio);
+
+    //free(genero);
     
     return;
 }
