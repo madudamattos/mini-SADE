@@ -300,18 +300,18 @@ void ImprimePessoa(tPessoa* p){
     printf("NIVEL DE ACESSO: %d\n", p->nivelAcesso);
     printf("USER: %s\n", p->user);
     printf("SENHA: %s\n", p->senha);
-    printf("CRM: %s\n", p->CRM);
-    printf("DIABETES: %d\n", p->diabetes);
-    printf("FUMANTE: %d\n", p->fumante);
-    printf("ALERGIAS: %d\n", p->alergias);
-    printf("HISTORICO DE CANCER: %d\n", p->histCancer);
-    printf("TIPO DE PELE: %s\n", p->tipoPele);
     printf("QNTD DE LESOES: %d\n", p->qntdLesoes);
-    printf("ATENDIDO: %d\n", p->atendido);
     printf("LESOES:\n");
+
     if(p->classeAtor == PACIENTE){
-        ImprimeVetorLesoes(p->lesoes, p->qntdLesoes);
+        if(p->lesoes != NULL){
+            ImprimeVetorLesoes(p->lesoes, p->qntdLesoes);
+        }
+        else{
+            printf("lesoes nulas\n");
+        }
     }
+
 }
 
 int RetornaSomaTamanhoLesoesPessoa(tPessoa* pessoa){
@@ -396,4 +396,8 @@ void LeBinarioPaciente(FILE* arquivo, tPessoa* p){
         p->lesoes[i] = AlocaLesao();
         LeBinarioLesao(arquivo, p->lesoes[i]);
     }
+}
+
+void SetaVetorLesoesParaNulo(tPessoa* p){
+    p->lesoes = NULL;
 }

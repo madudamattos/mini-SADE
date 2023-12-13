@@ -101,4 +101,6 @@ void LeBinarioPaciente(FILE* arquivo, tPessoa* p);
 
 void LeBinarioLesoesPessoa(FILE* arquivo, tPessoa* p);
 
+void SetaVetorLesoesParaNulo(tPessoa* p);
+
 #endif

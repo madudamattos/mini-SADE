@@ -106,36 +106,38 @@ void ExecutaSADE(tSade* sade, char *caminhoPastaSaida){
     char c;
     NIVELACESSO acesso;
     
-    printf("\nimprime SADE:------------------------\n");
-    printf("qtdPacientes: %d\n", sade->qtdPacientes);
-    printf("qtdMedicos: %d\n", sade->qtdMedicos);
-    printf("qtdSecretarios: %d\n", sade->qtdSecretarios);
-    printf("primeiroUso: %d\n", sade->primeiroUso);
+    //DEPURACAO
+    // printf("\nimprime SADE:------------------------\n");
+    // printf("qtdPacientes: %d\n", sade->qtdPacientes);
+    // printf("qtdMedicos: %d\n", sade->qtdMedicos);
+    // printf("qtdSecretarios: %d\n", sade->qtdSecretarios);
+    // printf("qtdLesoes: %d\n", sade->qtdLesoes);
+    // printf("primeiroUso: %d\n", sade->primeiroUso);
 
-    printf("vetores sade:\n");
+    // printf("vetores sade:\n");
 
-    for(int i=0 ; i<sade->qtdPacientes; i++){
-        printf("--- paciente %d:\n", i);
-        ImprimePessoa(sade->pacientes[i]);
-    }
+    // for(int i=0 ; i<sade->qtdPacientes; i++){
+    //     printf("--- paciente %d:\n", i);
+    //     ImprimePessoa(sade->pacientes[i]);
+    // }
 
-    for(int i=0 ; i<sade->qtdSecretarios; i++){
-        printf("--- secretario %d:\n", i);
-        ImprimePessoa(sade->secretarios[i]);
-    }
+    // for(int i=0 ; i<sade->qtdSecretarios; i++){
+    //     printf("--- secretario %d:\n", i);
+    //     ImprimePessoa(sade->secretarios[i]);
+    // }
 
-    for(int i=0 ; i<sade->qtdMedicos; i++){
-        printf("--- medico %d:\n", i);
-        ImprimePessoa(sade->medicos[i]);
-    }
+    // for(int i=0 ; i<sade->qtdMedicos; i++){
+    //     printf("--- medico %d:\n", i);
+    //     ImprimePessoa(sade->medicos[i]);
+    // }
 
-    printf("vetores lesoes:\n");
-    //imprimeLesoes
-    for(int i=0; i<sade->qtdPacientes; i++){
-        ImprimeVetorLesoes(sade->lesoes[i], sade->qtdLesoesPacientes[i]);
-    }
+    // printf("vetores lesoes:\n");
+    // //imprimeLesoes
+    // for(int i=0; i<sade->qtdPacientes; i++){
+    //     ImprimeVetorLesoes(sade->lesoes[i], sade->qtdLesoesPacientes[i]);
+    // }
 
-    printf("INICIA PROGRAMA ------------------------:\n\n");
+    // printf("INICIA PROGRAMA ------------------------:\n\n");
 
     //EM CASO DE PRIMEIRO USO CADASTRA SECRETARIO
     if(sade->primeiroUso == 1){
@@ -647,6 +649,7 @@ void LeBinarioPacientes(tSade* sade, char* caminhoBancoDados){
     for(int i=0; i<sade->qtdPacientes; i++){
         tPessoa *paciente = CriaPessoa();
         LeBinarioPessoa(pArquivo, paciente);
+        SetaVetorLesoesParaNulo(paciente);
         sade->pacientes[i] = paciente; 
     }
 
