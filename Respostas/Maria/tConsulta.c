@@ -14,6 +14,7 @@
 void RealizaConsulta(tSade* sade){
     char dataConsulta[20], cpf[20], tipoPele[10];
     int diabetes, fumante, alergia, histCancer;
+    int dia, mes, ano;
 
     tPessoa* medico = RetornaUsuarioLogado(sade);
 
@@ -38,7 +39,7 @@ void RealizaConsulta(tSade* sade){
     printf("-NOME: %s\n", RetornaNomePessoa(paciente));
     printf("-DATA DE NASCIMENTO: %s\n", RetornaDataNascimetoPessoa(paciente));
     printf("DATA DA CONSULTA: ");
-    scanf("%[^\n]%*c", dataConsulta);
+    scanf("%02d/%02d/%04d%*c", &dia, &mes, &ano);
     printf("POSSUI DIABETES: ");
     scanf("%d%*c", &diabetes);
     printf("FUMANTE: ");
@@ -57,6 +58,9 @@ void RealizaConsulta(tSade* sade){
     SetaPacienteTipoPele(paciente, tipoPele);
 
     SetaPacienteParaAtendido(paciente);
+
+    // Converte a data de volta para uma string
+    sprintf(dataConsulta, "%d/%d/%d", dia, mes, ano);
 
     printf("############################################################\n");
     
@@ -93,8 +97,16 @@ void CadastraLesao(tPessoa* paciente){
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
     AumentaQtdLesoesPaciente(paciente);
-    tLesao* lesao = CriaLesao(RetornaQtdLesoesPaciente(paciente));
+    AumentaQtdLesoesConsultaPaciente(paciente);
+    tLesao* lesao = CriaLesao(RetornaQtdLesoesConsultaPaciente(paciente));
+    SetaConsultaLesao(lesao);
     AdicionaLesao(lesao, paciente);
+
+    // printf("paciente: %s\n", RetornaNomePessoa(paciente));
+    // ImprimeLesao(lesao);
+    // printf("StatusConsulta: %d\n", RetornaConsultaLesao(lesao));
+    // printf("qtdLesoesConsulta Paciente: %d\n", RetornaQtdLesoesConsultaPaciente(paciente));
+
     while ((c = getchar()) != '\n' && c != EOF);    
     scanf("%*c");
 }
@@ -155,12 +167,6 @@ void SolicitaBiopsia(tSade* sade, tPessoa* pessoa, tPessoa* medico, char* dataSt
     if(biopsia == NULL){
         printf("#################### CONSULTA MEDICA #######################\nNAO E POSSIVEL SOLICITAR BIOPSIA SEM LESAO CIRURGICA. PRESSIONE QUALQUER TECLA PARA RETORNAR AO MENU ANTERIOR\n############################################################\n");
         return;
-    }
-
-    for(int i=0; i<qtdLesoes; i++){
-        if(RetornaCirurgia(lesoes[i]) == 1){
-            SetaBiopsiaLesao(lesoes[i]);
-        }
     }
 
     insereDocumentoFila(RetornaFilaSADE(sade), biopsia, ImprimeNaTelaBiopsia, ImprimeEmArquivoBiopsia, DesalocaBiopsia);

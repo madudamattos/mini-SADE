@@ -99,8 +99,12 @@ void LeBinarioPessoa(FILE* arquivo, tPessoa* p);
 
 void LeBinarioPaciente(FILE* arquivo, tPessoa* p);
 
-void LeBinarioLesoesPessoa(FILE* arquivo, tPessoa* p);
+int RetornaQtdLesoesConsultaPaciente(tPessoa *p);
 
-void SetaVetorLesoesParaNulo(tPessoa* p);
+void AumentaQtdLesoesConsultaPaciente(tPessoa *p);
+
+void ResetaQtdLesoesConsultaPaciente(tPessoa *p);
+
+int RetornaData(int opcao, char* dataStr);
 
 #endif

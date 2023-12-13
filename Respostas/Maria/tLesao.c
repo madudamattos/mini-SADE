@@ -10,7 +10,7 @@ struct tLesao{
     int tamanho;
     int cirurgia;
     int crioterapia;
-    int biopsia;
+    int consulta;
 };
 
 tLesao* AlocaLesao(){
@@ -31,6 +31,7 @@ tLesao* CriaLesao(int qtdLesoes){
     scanf("%d", &lesao->cirurgia);
     printf("ENVIAR PARA CRIOTERAPIA: ");
     scanf("%d", &lesao->crioterapia);
+    lesao->consulta = 0;
     lesao->rotulo[0] = 'L';
     lesao->rotulo[1] = '0' + qtdLesoes;
     lesao->rotulo[2] = '\0';
@@ -80,6 +81,7 @@ tLesao* ClonaLesao(tLesao* lesao){
     lesaoClonada->tamanho = lesao->tamanho;
     lesaoClonada->cirurgia = lesao->cirurgia;
     lesaoClonada->crioterapia = lesao->crioterapia;
+    lesaoClonada->consulta = lesao->consulta;
     
     return lesaoClonada;
 }
@@ -107,10 +109,14 @@ void LeBinarioLesao(FILE* arquivo, tLesao* lesao){
     fread(lesao, sizeof(tLesao), 1, arquivo);
 }
 
-void SetaBiopsiaLesao(tLesao* lesao){
-    lesao->biopsia = 1;
+void SetaConsultaLesao(tLesao* lesao){
+    lesao->consulta = 1;
 }
 
-int RetornaBiopsiaLesao(tLesao* lesao){
-    return lesao->biopsia;
+void ResetaConsultaLesao(tLesao* lesao){
+    lesao->consulta = 0;
+}
+
+int RetornaConsultaLesao(tLesao* lesao){
+    return lesao->consulta;
 }

@@ -35,8 +35,10 @@ void EscreveBinarioLesao(FILE* arquivo, tLesao* lesao);
 
 void LeBinarioLesao(FILE* arquivo, tLesao* lesao);
 
-void SetaBiopsiaLesao(tLesao* lesao);
+void SetaConsultaLesao(tLesao* lesao);
 
-int RetornaBiopsiaLesao(tLesao* lesao);
+void ResetaConsultaLesao(tLesao* lesao);
+
+int RetornaConsultaLesao(tLesao* lesao);
 
 #endif

@@ -27,7 +27,7 @@ tBiopsia *CriaBiopsia(char *nomePaciente, char *CPF,
     strncpy(biopsia->dataStr, dataStr, sizeof(biopsia->dataStr) - 1);
 
     biopsia->qntdLesoes = qntdLesoes;
-
+    
     biopsia->lesoes = ClonaVetorLesoes(lesoes, qntdLesoes);
 
     int qtdLesoesParaCirurgia = 0;
@@ -108,7 +108,7 @@ void ImprimeEmArquivoBiopsia(void *dado, char *path){
         fprintf(pBiopsia, "SOLICITACAO DE BIOPSIA PARA AS LESOES:\n");
 
         for(int i=0; i<biopsia->qntdLesoes; i++){
-            if((RetornaCirurgia(biopsia->lesoes[i]) == 1) && (RetornaBiopsiaLesao(biopsia->lesoes[i]) == 0)){
+            if((RetornaCirurgia(biopsia->lesoes[i]) == 1) && (RetornaConsultaLesao(biopsia->lesoes[i]) == 1)){
                 ImprimeLesaoArquivo(pBiopsia, biopsia->lesoes[i]);
             }
         }

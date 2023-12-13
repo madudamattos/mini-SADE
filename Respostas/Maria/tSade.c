@@ -15,13 +15,10 @@ struct tSade{
     int qtdPacientes;
     int qtdMedicos;
     int qtdSecretarios;
-    int qtdLesoes;
-    int *qtdLesoesPacientes;
     tPessoa **pacientes;
     tPessoa **medicos;
     tPessoa **secretarios;
     tPessoa *usuarioLogado;
-    tLesao *** lesoes;
     tFila *fila;
     int primeiroUso;
 };
@@ -32,13 +29,10 @@ tSade* CriaSADE(){
     sade->qtdPacientes = 0;
     sade->qtdMedicos = 0;
     sade->qtdSecretarios = 0;
-    sade->qtdLesoes = 0;
     sade->pacientes = NULL;
     sade->medicos = NULL;
     sade->secretarios = NULL;
     sade->usuarioLogado = NULL;
-    sade->lesoes = NULL;
-    sade->qtdLesoesPacientes = NULL;
     sade->primeiroUso = 0;
 
     sade->fila = criaFila();
@@ -77,13 +71,20 @@ void InicializaSADE(tSade* sade, char* caminhoBancoDados){
     }
     else{
         //le os arquivos binarios caso nao seja o primeiro uso
-        printf("1\n");
         LeBinarioPacientes(sade, caminhoBancoDados);
 
-        printf("2\n");
-        LeBinarioLesoes(sade, caminhoBancoDados);
+        //reseta as lesoes das consultas anteriores
+        for(int i=0; i<sade->qtdPacientes; i++){
+            ResetaQtdLesoesConsultaPaciente(sade->pacientes[i]);
+            tLesao ** lesoes = RetornaLesoesPaciente(sade->pacientes[i]);
+            int qtdLesoes = RetornaQtdLesoesPaciente(sade->pacientes[i]);
+            for(int j=0; j<qtdLesoes; j++){
+                ResetaConsultaLesao(lesoes[j]);
+            }
+        }
 
-        printf("3\n");
+        //LeBinarioLesoes(sade, caminhoBancoDados);
+
         LeBinarioSecretarios(sade, caminhoBancoDados);
 
         LeBinarioMedicos(sade, caminhoBancoDados);
@@ -106,12 +107,10 @@ void ExecutaSADE(tSade* sade, char *caminhoPastaSaida){
     char c;
     NIVELACESSO acesso;
     
-    //DEPURACAO
     // printf("\nimprime SADE:------------------------\n");
     // printf("qtdPacientes: %d\n", sade->qtdPacientes);
     // printf("qtdMedicos: %d\n", sade->qtdMedicos);
     // printf("qtdSecretarios: %d\n", sade->qtdSecretarios);
-    // printf("qtdLesoes: %d\n", sade->qtdLesoes);
     // printf("primeiroUso: %d\n", sade->primeiroUso);
 
     // printf("vetores sade:\n");
@@ -129,12 +128,6 @@ void ExecutaSADE(tSade* sade, char *caminhoPastaSaida){
     // for(int i=0 ; i<sade->qtdMedicos; i++){
     //     printf("--- medico %d:\n", i);
     //     ImprimePessoa(sade->medicos[i]);
-    // }
-
-    // printf("vetores lesoes:\n");
-    // //imprimeLesoes
-    // for(int i=0; i<sade->qtdPacientes; i++){
-    //     ImprimeVetorLesoes(sade->lesoes[i], sade->qtdLesoesPacientes[i]);
     // }
 
     // printf("INICIA PROGRAMA ------------------------:\n\n");
@@ -184,10 +177,7 @@ void ExecutaSADE(tSade* sade, char *caminhoPastaSaida){
             scanf("%d", &opcao);
             if (opcao == 2) AddMedicoSADE(sade);
             else if(opcao == 3) AddPacienteSADE(sade);
-            else if(opcao == 5){
-                BuscaPacientes(sade);
-                break;
-            }
+            else if(opcao == 5) BuscaPacientes(sade);
             else if(opcao == 6) ExibeRelatorioGeral(sade);
             else if(opcao == 7) ExecutaFilaImpressao(sade, caminhoPastaSaida);
         }
@@ -200,10 +190,7 @@ void ExecutaSADE(tSade* sade, char *caminhoPastaSaida){
 
             scanf("%d", &opcao);
             if(opcao == 4) RealizaConsulta(sade);
-            else if(opcao == 5){
-                BuscaPacientes(sade);
-                break;
-            }
+            else if(opcao == 5) BuscaPacientes(sade);
             else if(opcao == 6) ExibeRelatorioGeral(sade);
             else if(opcao == 7) ExecutaFilaImpressao(sade, caminhoPastaSaida);
         }
@@ -219,13 +206,12 @@ void ExecutaSADE(tSade* sade, char *caminhoPastaSaida){
 
 void FinalizaSADE(tSade* sade, char *caminhoBancoDados){
 
-    CriaLesoesSade(sade);
-
+    //printf(" caminho banco: %s\n", caminhoBancoDados);
     // passa as informações todas pros arquivos
     
     EscreveBinarioPacientes(sade, caminhoBancoDados);
 
-    EscreveBinarioLesoes(sade, caminhoBancoDados);
+    //EscreveBinarioLesoes(sade, caminhoBancoDados);
 
     EscreveBinarioSecretarios(sade, caminhoBancoDados);
 
@@ -234,27 +220,16 @@ void FinalizaSADE(tSade* sade, char *caminhoBancoDados){
     //EscreveBinarioConsulta(sade, caminhoBancoDados);
 
     //desaloca os vetores 
-
-    //desaloca lesoes
-    for(int i=0; i<sade->qtdPacientes; i++){
-        DesalocaLesoes(sade->lesoes[i], sade->qtdLesoesPacientes[i]);
-    }
-    free(sade->lesoes);
-    free(sade->qtdLesoesPacientes);
-
-    //desaloca secretarios
     for(int i = 0; i < sade->qtdSecretarios; i++){
         DesalocaPessoa(sade->secretarios[i]);
     }
     free(sade->secretarios);
 
-    //desaloca medicos
     for(int i = 0; i < sade->qtdMedicos; i++){
         DesalocaPessoa(sade->medicos[i]);
     }
     free(sade->medicos);
 
-    //desaloca pacientes
     for(int i = 0; i < sade->qtdPacientes; i++){
         DesalocaPessoa(sade->pacientes[i]);
     }
@@ -396,7 +371,7 @@ void BuscaPacientes(tSade* sade){
     }
 
     tBusca* busca = criaListaBusca(pacientesEncontrados, qtdPacientesEncontrados);
-
+    
     free(pacientesEncontrados);
 
     printf("#################### BUSCAR PACIENTES #######################\n");
@@ -404,6 +379,8 @@ void BuscaPacientes(tSade* sade){
     if(qtdPacientesEncontrados == 0){
         printf("NENHUM PACIENTE FOI ENCONTRADO. PRESSIONE QUALQUER TECLA PARA RETORNAR AO MENU ANTERIOR\n");
         printf("############################################################\n");
+
+        scanf("%*c");
         return;
     }
     else{
@@ -475,8 +452,6 @@ void ExibeRelatorioGeral(tSade* sade){
         else totalOutros++;
     }
     
-    sade->qtdLesoes = totalLesoes;
-
     if(totalLesoes != 0){
         mediaTamLesoes = mediaTamLesoes / totalLesoes;
     }
@@ -555,7 +530,7 @@ void EscreveBinarioPacientes(tSade* sade, char* caminhoBancoDados){
     for(int i=0; i<sade->qtdPacientes; i++){
         tPessoa *paciente = sade->pacientes[i];
         EscreveBinarioPessoa(pArquivo, paciente);
-        //EscreveBinarioLesoesPessoa(pArquivo, paciente);
+        EscreveBinarioLesoesPessoa(pArquivo, paciente);
     }
 
     fclose(pArquivo);
@@ -570,12 +545,6 @@ void EscreveBinarioLesoes(tSade* sade, char* caminhoBancoDados){
     if (pArquivo == NULL) {
         printf("Erro ao escrever arquivo binario lesoes\n");
         return;
-    }
-
-    fwrite(&sade->qtdLesoes, sizeof(int), 1, pArquivo);
-
-    for(int i=0; i<sade->qtdPacientes; i++){
-        fwrite(&sade->qtdLesoesPacientes[i], sizeof(int), 1, pArquivo);
     }
 
     for(int i=0; i<sade->qtdPacientes; i++){
@@ -648,8 +617,7 @@ void LeBinarioPacientes(tSade* sade, char* caminhoBancoDados){
 
     for(int i=0; i<sade->qtdPacientes; i++){
         tPessoa *paciente = CriaPessoa();
-        LeBinarioPessoa(pArquivo, paciente);
-        SetaVetorLesoesParaNulo(paciente);
+        LeBinarioPaciente(pArquivo, paciente);
         sade->pacientes[i] = paciente; 
     }
 
@@ -718,75 +686,4 @@ void LeBinarioMedicos(tSade* sade, char* caminhoBancoDados){
     }
 
     fclose(pArquivo);
-}
-
-void LeBinarioLesoes(tSade* sade, char* caminhoBancoDados){
-    char caminhoArquivo[TAM_NOME_CAMINHO + 1];
-    sprintf(caminhoArquivo, "%s/lesoes.bin", caminhoBancoDados);
-    
-    FILE *pArquivo = fopen(caminhoArquivo, "rb");
-
-    if (pArquivo == NULL) {
-        printf("Erro ao ler arquivo binario lesoes\n");
-        return;
-    }
-
-    fread(&sade->qtdLesoes, sizeof(int), 1, pArquivo);
-
-    sade->qtdLesoesPacientes = (int *) calloc(sade->qtdPacientes, sizeof(int));
-
-    for(int i=0; i<sade->qtdPacientes; i++){
-        fread(&sade->qtdLesoesPacientes[i], sizeof(int), 1, pArquivo);
-    }
-
-    sade->lesoes = (tLesao ***) calloc(sade->qtdPacientes, sizeof(tLesao**));
-
-    for(int i=0; i<sade->qtdPacientes; i++){
-        sade->lesoes[i] = (tLesao **) calloc(sade->qtdLesoesPacientes[i], sizeof(tLesao*));
-
-        for(int j=0; j<sade->qtdLesoesPacientes[i]; j++){
-            tLesao *lesao = AlocaLesao();
-            LeBinarioLesao(pArquivo, lesao);
-            sade->lesoes[i][j] = lesao;
-        }
-    }
-
-    //imprime as informaç~eos lidas
-
-    // for(int i=0; i<sade->qtdPacientes; i++){
-    //     printf("paciente %d:\n", i);
-    //     ImprimeVetorLesoes(sade->lesoes[i], sade->qtdLesoesPacientes[i]);
-    // }
-
-    fclose(pArquivo);
-}
-
-void CriaLesoesSade(tSade* sade){
-    int totalLesoes = 0;
-    sade->lesoes = (tLesao ***) calloc(sade->qtdPacientes, sizeof(tLesao**));
-    sade->qtdLesoesPacientes = (int *) calloc(sade->qtdPacientes, sizeof(int));
-
-    for(int i=0; i<sade->qtdPacientes; i++){
-        int totalLesoesPaciente = 0;
-        int qtdLesoesPaciente = 0;
-
-        totalLesoes += RetornaQtdLesoesPaciente(sade->pacientes[i]);
-        qtdLesoesPaciente = RetornaQtdLesoesPaciente(sade->pacientes[i]);
-        
-        sade->qtdLesoesPacientes[i] = qtdLesoesPaciente;	
-
-        if(RetornaLesoesPaciente(sade->pacientes[i]) != NULL){
-
-            tLesao ** lesoesPaciente = RetornaLesoesPaciente(sade->pacientes[i]);
-            sade->lesoes[i] = ClonaVetorLesoes(lesoesPaciente, qtdLesoesPaciente);
-        }
-        else{
-            sade->lesoes[i] = NULL;
-        }
-        
-    }
-
-    sade->qtdLesoes = totalLesoes;
-
-
 }

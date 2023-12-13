@@ -23,6 +23,7 @@ struct tPessoa{
     char tipoPele[10];
     int qntdLesoes;
     int atendido;
+    int qtdLesoesConsulta;
     tLesao** lesoes;
 };
 
@@ -47,6 +48,7 @@ tPessoa* CriaPessoa(){
     p->histCancer = 0;
     p->qntdLesoes = 0;
     p->atendido = 0;
+    p->qtdLesoesConsulta = 0;
     p->lesoes = NULL;
 
     return p;
@@ -300,18 +302,18 @@ void ImprimePessoa(tPessoa* p){
     printf("NIVEL DE ACESSO: %d\n", p->nivelAcesso);
     printf("USER: %s\n", p->user);
     printf("SENHA: %s\n", p->senha);
+    printf("CRM: %s\n", p->CRM);
+    printf("DIABETES: %d\n", p->diabetes);
+    printf("FUMANTE: %d\n", p->fumante);
+    printf("ALERGIAS: %d\n", p->alergias);
+    printf("HISTORICO DE CANCER: %d\n", p->histCancer);
+    printf("TIPO DE PELE: %s\n", p->tipoPele);
     printf("QNTD DE LESOES: %d\n", p->qntdLesoes);
+    printf("ATENDIDO: %d\n", p->atendido);
     printf("LESOES:\n");
-
     if(p->classeAtor == PACIENTE){
-        if(p->lesoes != NULL){
-            ImprimeVetorLesoes(p->lesoes, p->qntdLesoes);
-        }
-        else{
-            printf("lesoes nulas\n");
-        }
+        ImprimeVetorLesoes(p->lesoes, p->qntdLesoes);
     }
-
 }
 
 int RetornaSomaTamanhoLesoesPessoa(tPessoa* pessoa){
@@ -368,20 +370,10 @@ void EscreveBinarioPessoa(FILE* arquivo, tPessoa* p){
 }
 
 void EscreveBinarioLesoesPessoa(FILE* arquivo, tPessoa* p){
-    if(p->lesoes != NULL){
-        for(int i=0; i<p->qntdLesoes; i++){
-            EscreveBinarioLesao(arquivo, p->lesoes[i]);
-        }
+    for(int i=0; i<p->qntdLesoes; i++){
+        EscreveBinarioLesao(arquivo, p->lesoes[i]);
     }
 }
-
-// void LeBinarioLesoesPessoa(FILE* arquivo, tPessoa* p){
-//     if(p->lesoes != NULL){
-//         for(int i=0; i<p->qntdLesoes; i++){
-//             LeBinarioLesao(arquivo, p->lesoes[i]);
-//         }
-//     }
-// }
 
 void LeBinarioPessoa(FILE* arquivo, tPessoa* p){
     fread(p, sizeof(tPessoa), 1, arquivo);
@@ -398,6 +390,33 @@ void LeBinarioPaciente(FILE* arquivo, tPessoa* p){
     }
 }
 
-void SetaVetorLesoesParaNulo(tPessoa* p){
-    p->lesoes = NULL;
+int RetornaQtdLesoesConsultaPaciente(tPessoa *p){
+    return p->qtdLesoesConsulta;
+}
+
+void AumentaQtdLesoesConsultaPaciente(tPessoa *p){
+    p->qtdLesoesConsulta++;
+}
+
+void ResetaQtdLesoesConsultaPaciente(tPessoa *p){
+    p->qtdLesoesConsulta = 0;
+}
+
+int RetornaData(int opcao, char* dataStr){
+    int dia, mes, ano;
+
+    char* data = dataStr;
+    sscanf(data, "%d/%d/%d", &dia, &mes, &ano);
+
+    if(opcao == 1){
+        return dia;
+    }
+    else if(opcao == 2){
+        return mes;
+    }
+    else if(opcao == 3){
+        return ano;
+    }
+
+    return 0;
 }

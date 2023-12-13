@@ -32,7 +32,6 @@ tReceita *criaReceita(char *nomePaciente, eTipoUso tipoUso, char *nomeMedicament
     strncpy(receita->CRM, CRM, sizeof(receita->CRM) - 1);
     strncpy(receita->dataStr, dataStr, sizeof(receita->dataStr) - 1);
 
-
     return receita;                    
 }
 
@@ -56,7 +55,7 @@ void imprimeNaTelaReceita(void *dado){
         printf("%s\n\n", receita->instrucoes);
        
         printf("%s (%s)\n", receita->nomeMedico, receita->CRM);
-
+        
         printf("%s\n", receita->dataStr);
     }
 }
