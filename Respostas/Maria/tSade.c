@@ -286,8 +286,8 @@ tPessoa* RealizaLogin(tSade* sade){
     }
 
     if(encontrou == 0){
-        printf("LOGIN OU SENHA INCORRETOS\n");
-        return NULL;
+        printf("SENHA INCORRETA OU USUARIO INEXISTENTE\n");
+        return RealizaLogin(sade);
     }
 }
 
