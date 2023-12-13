@@ -10,6 +10,7 @@ struct tLesao{
     int tamanho;
     int cirurgia;
     int crioterapia;
+    int biopsia;
 };
 
 tLesao* AlocaLesao(){
@@ -104,4 +105,12 @@ void EscreveBinarioLesao(FILE* arquivo, tLesao* lesao){
 
 void LeBinarioLesao(FILE* arquivo, tLesao* lesao){
     fread(lesao, sizeof(tLesao), 1, arquivo);
+}
+
+void SetaBiopsiaLesao(tLesao* lesao){
+    lesao->biopsia = 1;
+}
+
+int RetornaBiopsiaLesao(tLesao* lesao){
+    return lesao->biopsia;
 }

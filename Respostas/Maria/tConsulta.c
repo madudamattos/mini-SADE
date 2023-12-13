@@ -157,6 +157,12 @@ void SolicitaBiopsia(tSade* sade, tPessoa* pessoa, tPessoa* medico, char* dataSt
         return;
     }
 
+    for(int i=0; i<qtdLesoes; i++){
+        if(RetornaCirurgia(lesoes[i]) == 1){
+            SetaBiopsiaLesao(lesoes[i]);
+        }
+    }
+
     insereDocumentoFila(RetornaFilaSADE(sade), biopsia, ImprimeNaTelaBiopsia, ImprimeEmArquivoBiopsia, DesalocaBiopsia);
     
     printf("#################### CONSULTA MEDICA #######################\nSOLICITACAO DE BIOPSIA ENVIADA PARA FILA DE IMPRESSAO. PRESSIONE QUALQUER TECLA PARA RETORNAR AO MENU ANTERIOR\n############################################################\n");

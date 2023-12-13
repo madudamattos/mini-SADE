@@ -40,4 +40,6 @@ void DesalocaLesoes(tLesao** lesoes, int qntdLesoes);
  */
 void ImprimeEmArquivoBiopsia(void *dado, char *path);
 
+tLesao** RetornaLesoesBiopsia(tBiopsia* biopsia);
+
 #endif

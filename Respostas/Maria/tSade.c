@@ -15,10 +15,13 @@ struct tSade{
     int qtdPacientes;
     int qtdMedicos;
     int qtdSecretarios;
+    int qtdLesoes;
+    int *qtdLesoesPacientes;
     tPessoa **pacientes;
     tPessoa **medicos;
     tPessoa **secretarios;
     tPessoa *usuarioLogado;
+    tLesao *** lesoes;
     tFila *fila;
     int primeiroUso;
 };
@@ -29,11 +32,14 @@ tSade* CriaSADE(){
     sade->qtdPacientes = 0;
     sade->qtdMedicos = 0;
     sade->qtdSecretarios = 0;
+    sade->qtdLesoes = 0;
     sade->pacientes = NULL;
     sade->medicos = NULL;
     sade->secretarios = NULL;
     sade->usuarioLogado = NULL;
-    sade->primeiroUso = 0;
+    sade->lesoes = NULL;
+    sade->qtdLesoesPacientes = NULL;
+    sade->primeiroUso = 1;
 
     sade->fila = criaFila();
 
@@ -209,27 +215,40 @@ void FinalizaSADE(tSade* sade, char *caminhoBancoDados){
     //printf(" caminho banco: %s\n", caminhoBancoDados);
     // passa as informações todas pros arquivos
     
-    EscreveBinarioPacientes(sade, caminhoBancoDados);
+    //EscreveBinarioLesoes(sade, caminhoBancoDados);
 
-    // //EscreveBinarioLesoes(sade, caminhoBancoDados);
+    CriaLesoesSade(sade);
 
-    EscreveBinarioSecretarios(sade, caminhoBancoDados);
+    //EscreveBinarioPacientes(sade, caminhoBancoDados);
 
-    EscreveBinarioMedicos(sade, caminhoBancoDados);
+    //EscreveBinarioSecretarios(sade, caminhoBancoDados);
+
+    //EscreveBinarioMedicos(sade, caminhoBancoDados);
 
     //EscreveBinarioConsulta(sade, caminhoBancoDados);
 
     //desaloca os vetores 
+
+    //desaloca lesoes
+    for(int i=0; i<sade->qtdPacientes; i++){
+        DesalocaLesoes(sade->lesoes[i], sade->qtdLesoesPacientes[i]);
+    }
+    free(sade->lesoes);
+    free(sade->qtdLesoesPacientes);
+
+    //desaloca secretarios
     for(int i = 0; i < sade->qtdSecretarios; i++){
         DesalocaPessoa(sade->secretarios[i]);
     }
     free(sade->secretarios);
 
+    //desaloca medicos
     for(int i = 0; i < sade->qtdMedicos; i++){
         DesalocaPessoa(sade->medicos[i]);
     }
     free(sade->medicos);
 
+    //desaloca pacientes
     for(int i = 0; i < sade->qtdPacientes; i++){
         DesalocaPessoa(sade->pacientes[i]);
     }
@@ -450,8 +469,10 @@ void ExibeRelatorioGeral(tSade* sade){
         else totalOutros++;
     }
     
-    if(totalPacientesAtendidos != 0){
-        mediaTamLesoes = mediaTamLesoes / totalPacientesAtendidos;
+    sade->qtdLesoes = totalLesoes;
+
+    if(totalLesoes != 0){
+        mediaTamLesoes = mediaTamLesoes / totalLesoes;
     }
 
     if(totalPacientes != 0){
@@ -528,7 +549,7 @@ void EscreveBinarioPacientes(tSade* sade, char* caminhoBancoDados){
     for(int i=0; i<sade->qtdPacientes; i++){
         tPessoa *paciente = sade->pacientes[i];
         EscreveBinarioPessoa(pArquivo, paciente);
-        EscreveBinarioLesoesPessoa(pArquivo, paciente);
+        //EscreveBinarioLesoesPessoa(pArquivo, paciente);
     }
 
     fclose(pArquivo);
@@ -684,4 +705,36 @@ void LeBinarioMedicos(tSade* sade, char* caminhoBancoDados){
     }
 
     fclose(pArquivo);
+}
+
+void CriaLesoesSade(tSade* sade){
+    int totalLesoes = 0;
+    sade->lesoes = (tLesao ***) calloc(sade->qtdPacientes, sizeof(tLesao**));
+    sade->qtdLesoesPacientes = (int *) calloc(sade->qtdPacientes, sizeof(int));
+
+    for(int i=0; i<sade->qtdPacientes; i++){
+        int totalLesoesPaciente = 0;
+        int qtdLesoesPaciente = 0;
+
+        totalLesoesPaciente += RetornaQtdLesoesPaciente(sade->pacientes[i]);
+        qtdLesoesPaciente = RetornaQtdLesoesPaciente(sade->pacientes[i]);
+        
+        sade->qtdLesoesPacientes[i] = qtdLesoesPaciente;	
+
+        if(RetornaLesoesPaciente(sade->pacientes[i]) != NULL){
+
+            tLesao ** lesoesPaciente = RetornaLesoesPaciente(sade->pacientes[i]);
+            sade->lesoes[i] = ClonaVetorLesoes(lesoesPaciente, qtdLesoesPaciente);
+        }
+        else{
+            sade->lesoes[i] = NULL;
+        }
+        
+    }
+
+    // //imprimeLesoes
+    // for(int i=0; i<sade->qtdPacientes; i++){
+    //     ImprimeVetorLesoes(sade->lesoes[i], sade->qtdLesoesPacientes[i]);
+    // }
+
 }
