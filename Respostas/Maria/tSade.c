@@ -33,7 +33,7 @@ tSade* CriaSADE(){
     sade->medicos = NULL;
     sade->secretarios = NULL;
     sade->usuarioLogado = NULL;
-    sade->primeiroUso = 1;
+    sade->primeiroUso = 0;
 
     sade->fila = criaFila();
 
@@ -70,6 +70,24 @@ void InicializaSADE(tSade* sade, char* caminhoBancoDados){
             sade->primeiroUso = 1;
         }
     }
+    //printf("primeiro uso: %d\n", sade->primeiroUso);
+
+    if(sade->primeiroUso == 1){
+        
+        return;
+    }
+    else{
+        //le os arquivos binarios caso nao seja o primeiro uso
+        LeBinarioPacientes(sade, caminhoBancoDados);
+
+        //LeBinarioLesoes(sade, caminhoBancoDados);
+
+        LeBinarioSecretarios(sade, caminhoBancoDados);
+
+        LeBinarioMedicos(sade, caminhoBancoDados);
+
+        //LeBinarioConsulta(sade, caminhoBancoDados);
+    }
 
 }
 
@@ -86,15 +104,37 @@ void ExecutaSADE(tSade* sade, char *caminhoPastaSaida){
     char c;
     NIVELACESSO acesso;
     
+    // printf("imprime SADE:\n");
+    // printf("qtdPacientes: %d\n", sade->qtdPacientes);
+    // printf("qtdMedicos: %d\n", sade->qtdMedicos);
+    // printf("qtdSecretarios: %d\n", sade->qtdSecretarios);
+    //printf("primeiroUso: %d\n", sade->primeiroUso);
+
+    // printf("vetores sade:\n");
+
+    // for(int i=0 ; i<sade->qtdPacientes; i++){
+    //     printf("--- paciente %d:\n", i);
+    //     ImprimePessoa(sade->pacientes[i]);
+    // }
+
+    // for(int i=0 ; i<sade->qtdMedicos; i++){
+    //     printf("--- medico %d:\n", i);
+    //     ImprimePessoa(sade->medicos[i]);
+    // }
+
     //EM CASO DE PRIMEIRO USO CADASTRA SECRETARIO
     if(sade->primeiroUso == 1){
         sade->qtdSecretarios++;
         sade->secretarios = realloc(sade->secretarios, sizeof(tPessoa *) * sade->qtdSecretarios); 
         sade->secretarios[sade->qtdSecretarios-1] = CadastraSecretario();
-        sade->usuarioLogado = sade->secretarios[0];
     }
     
     sade->usuarioLogado = RealizaLogin(sade);
+
+    if(RetornaUsuarioLogado(sade) == NULL){
+        printf("USUARIO NAO ENCONTRADO\n");
+        exit(1);
+    }
 
     acesso = RetornaNivelAcessoPessoa(sade->usuarioLogado);
     
@@ -162,8 +202,17 @@ void ExecutaSADE(tSade* sade, char *caminhoPastaSaida){
 
 void FinalizaSADE(tSade* sade, char *caminhoBancoDados){
 
+    printf(" caminho banco: %s\n", caminhoBancoDados);
     // passa as informações todas pros arquivos
-    
+    EscreveBinarioPacientes(sade, caminhoBancoDados);
+
+    //EscreveBinarioLesoes(sade, caminhoBancoDados);
+
+    EscreveBinarioSecretarios(sade, caminhoBancoDados);
+
+    EscreveBinarioMedicos(sade, caminhoBancoDados);
+
+    //EscreveBinarioConsulta(sade, caminhoBancoDados);
 
     //desaloca os vetores 
     for(int i = 0; i < sade->qtdSecretarios; i++){
@@ -452,4 +501,159 @@ void ExecutaFilaImpressao(tSade* sade, char *caminhoPastaSaida){
 
 void SetaPrimeiroUsoSade(tSade* sade){
     sade->primeiroUso = 1;
+}
+
+void EscreveBinarioPacientes(tSade* sade, char* caminhoBancoDados){
+    char caminhoArquivo[TAM_NOME_CAMINHO + 1];
+    sprintf(caminhoArquivo, "%s/pacientes.bin", caminhoBancoDados);
+    
+    printf("caminho arquivo: %s\n", caminhoArquivo);
+
+    FILE *pArquivo = fopen(caminhoArquivo, "ab");
+
+    if (pArquivo == NULL) {
+        printf("Erro ao escrever arquivo binario pacientes\n");
+        return;
+    }
+    
+    fwrite(&sade->qtdPacientes, sizeof(int), 1, pArquivo);
+
+    for(int i=0; i<sade->qtdPacientes; i++){
+        tPessoa *paciente = sade->pacientes[i];
+        EscreveBinarioPessoa(pArquivo, paciente);
+        EscreveBinarioLesoesPessoa(pArquivo, paciente);
+    }
+
+    fclose(pArquivo);
+}
+
+void EscreveBinarioLesoes(tSade* sade, char* caminhoBancoDados){
+    char caminhoArquivo[TAM_NOME_CAMINHO + 1];
+    sprintf(caminhoArquivo, "%s/lesoes.bin", caminhoBancoDados);
+    
+    FILE *pArquivo = fopen(caminhoArquivo, "wb");
+
+    if (pArquivo == NULL) {
+        printf("Erro ao escrever arquivo binario lesoes\n");
+        return;
+    }
+
+    for(int i=0; i<sade->qtdPacientes; i++){
+        tPessoa *paciente = sade->pacientes[i];
+        EscreveBinarioLesoesPessoa(pArquivo, paciente);
+    }
+
+    fclose(pArquivo);
+}
+
+void EscreveBinarioSecretarios(tSade* sade, char* caminhoBancoDados){
+    char caminhoArquivo[500];
+    sprintf(caminhoArquivo, "%s/secretarios.bin", caminhoBancoDados);
+    
+    FILE *pArquivo = fopen(caminhoArquivo, "wb");
+
+    printf("caminho arquivo: %s\n", caminhoArquivo);
+    
+    if (pArquivo == NULL) {
+        printf("Erro ao escrever arquivo binario secretario\n");
+        return;
+    }
+
+    fwrite(&sade->qtdSecretarios, sizeof(int), 1, pArquivo);
+
+    for(int i=0; i<sade->qtdSecretarios; i++){
+        tPessoa *secretario = sade->secretarios[i];
+        EscreveBinarioPessoa(pArquivo, secretario);
+    }
+
+    fclose(pArquivo);
+}
+
+void EscreveBinarioMedicos(tSade* sade, char* caminhoBancoDados){
+    char caminhoArquivo[TAM_NOME_CAMINHO + 1];
+    sprintf(caminhoArquivo, "%s/medicos.bin", caminhoBancoDados);
+    
+    FILE *pArquivo = fopen(caminhoArquivo, "wb");
+
+    if (pArquivo == NULL) {
+        printf("Erro ao escrever arquivo binario secretario\n");
+        return;
+    }
+
+    fwrite(&sade->qtdMedicos, sizeof(int), 1, pArquivo);
+
+    for(int i=0; i<sade->qtdMedicos; i++){
+        tPessoa *medico = sade->secretarios[i];
+        EscreveBinarioPessoa(pArquivo, medico);
+    }
+
+    fclose(pArquivo);
+}
+
+void LeBinarioPacientes(tSade* sade, char* caminhoBancoDados){
+    char caminhoArquivo[TAM_NOME_CAMINHO + 1];
+    sprintf(caminhoArquivo, "%s/pacientes.bin", caminhoBancoDados);
+    
+    FILE *pArquivo = fopen(caminhoArquivo, "rb");
+
+    if (pArquivo == NULL) {
+        printf("Erro ao abrir arquivo binario pacientes\n");
+        return;
+    }
+    
+    fread(&sade->qtdPacientes, sizeof(int), 1, pArquivo);
+
+    sade->pacientes = calloc(sade->qtdPacientes, sizeof(tPessoa*) * sade->qtdPacientes);
+
+    for(int i=0; i<sade->qtdPacientes; i++){
+        tPessoa *paciente = CriaPessoa();
+        LeBinarioPaciente(pArquivo, paciente);
+        sade->pacientes[i] = paciente; 
+    }
+
+    fclose(pArquivo);
+}
+
+void LeBinarioSecretarios(tSade* sade, char* caminhoBancoDados){
+    char caminhoArquivo[TAM_NOME_CAMINHO + 1];
+    sprintf(caminhoArquivo, "%s/secretarios.bin", caminhoBancoDados);
+    
+    FILE *pArquivo = fopen(caminhoArquivo, "rb");
+    
+    if (pArquivo == NULL) {
+        printf("Erro ao escrever arquivo binario secretario\n");
+        return;
+    }
+
+    fread(&sade->qtdSecretarios, sizeof(int), 1, pArquivo);
+
+    for(int i=0; i<sade->qtdSecretarios; i++){
+        tPessoa *secretario = CriaPessoa();
+        LeBinarioPessoa(pArquivo, secretario);
+        sade->secretarios[i] = secretario;
+    }
+
+    fclose(pArquivo);
+}
+
+void LeBinarioMedicos(tSade* sade, char* caminhoBancoDados){
+    char caminhoArquivo[TAM_NOME_CAMINHO + 1];
+    sprintf(caminhoArquivo, "%s/medicos.bin", caminhoBancoDados);
+    
+    FILE *pArquivo = fopen(caminhoArquivo, "rb");
+
+    if (pArquivo == NULL) {
+        printf("Erro ao escrever arquivo binario secretario\n");
+        return;
+    }
+
+    fread(&sade->qtdMedicos, sizeof(int), 1, pArquivo);
+
+    for(int i=0; i<sade->qtdMedicos; i++){
+        tPessoa *medico = CriaPessoa();
+        EscreveBinarioPessoa(pArquivo, medico);
+        sade->medicos[i] = medico;
+    }
+
+    fclose(pArquivo);
 }

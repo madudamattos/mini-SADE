@@ -91,4 +91,12 @@ void SetaPacienteParaAtendido(tPessoa* p);
 
 int RetornaAtendidoPaciente(tPessoa* p);
 
+void EscreveBinarioPessoa(FILE* arquivo, tPessoa* p);
+
+void EscreveBinarioLesoesPessoa(FILE* arquivo, tPessoa* p);
+
+void LeBinarioPessoa(FILE* arquivo, tPessoa* p);
+
+void LeBinarioPaciente(FILE* arquivo, tPessoa* p);
+
 #endif

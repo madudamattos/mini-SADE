@@ -11,7 +11,7 @@ typedef struct tSade tSade;
 
 tSade* CriaSADE();
 
-void InicializaSADE(tSade* sade, char *MenuCaminhoBancoDados);
+void InicializaSADE(tSade* sade, char *caminhoBancoDados);
 
 void ExecutaSADE(tSade* sade, char *caminhoBancoDados);
 
@@ -44,5 +44,19 @@ void ExibeRelatorioGeral(tSade* sade);
 void ExecutaFilaImpressao(tSade* sade, char *caminhoPastaSaida);
 
 void SetaPrimeiroUsoSade(tSade* sade);
+
+void EscreveBinarioPacientes(tSade* sade, char* caminhoBancoDados);
+
+void EscreveBinarioLesoes(tSade* sade, char* caminhoBancoDados);
+
+void EscreveBinarioSecretarios(tSade* sade, char* caminhoBancoDados);
+
+void EscreveBinarioMedicos(tSade* sade, char* caminhoBancoDados);
+
+void LeBinarioPacientes(tSade* sade, char* caminhoBancoDados);
+
+void LeBinarioSecretarios(tSade* sade, char* caminhoBancoDados);
+
+void LeBinarioMedicos(tSade* sade, char* caminhoBancoDados);
 
 #endif

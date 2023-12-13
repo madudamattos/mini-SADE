@@ -7,7 +7,6 @@
 
 struct tPessoa{
     ATOR classeAtor;
-    NIVELACESSO nivelAcesso;
     char nome[100];
     char cpf[20];
     char dataNascimento[20];
@@ -15,6 +14,7 @@ struct tPessoa{
     char genero[20];
     char user[20];
     char senha[20];
+    NIVELACESSO nivelAcesso;
     char CRM[20];
     int diabetes;
     int fumante;
@@ -30,6 +30,24 @@ tPessoa* CriaPessoa(){
     tPessoa* p = (tPessoa*) calloc(1, sizeof(tPessoa));
 
     p->lesoes= NULL;
+    
+    p->nivelAcesso = 0;
+    p->nome[0] = '\0';
+    p->cpf[0] = '\0';
+    p->dataNascimento[0] = '\0';
+    p->telefone[0] = '\0';
+    p->genero[0] = '\0';
+    p->user[0] = '\0';
+    p->senha[0] = '\0';
+    p->CRM[0] = '\0';
+    p->tipoPele[0] = '\0';
+    p->diabetes = 0;
+    p->fumante = 0;
+    p->alergias = 0;
+    p->histCancer = 0;
+    p->qntdLesoes = 0;
+    p->atendido = 0;
+    p->lesoes = NULL;
 
     return p;
 };
@@ -69,9 +87,6 @@ tPessoa* CadastraSecretario(){
     printf("NIVEL DE ACESSO: ");
     scanf("%[^\n]%*c", acesso);
     secretario->nivelAcesso = ConverteStringNivelAcesso(acesso);
-
-    secretario->CRM[0] = '\0';
-    secretario->nome[0] = '\0';
     
     CadastroRealizado();
 
@@ -106,9 +121,6 @@ tPessoa* CadastraPaciente(){
     tPessoa* paciente = CadastraPessoa();
 
     paciente->classeAtor = PACIENTE;
-    paciente->nivelAcesso = NADA;
-
-    paciente->lesoes = NULL;
 
     CadastroRealizado();
 
@@ -280,13 +292,26 @@ NIVELACESSO RetornaNivelAcessoPessoa(tPessoa* p){
 }
 
 void ImprimePessoa(tPessoa* p){
-    printf("#################### DADOS PESSOA #######################\n");
     printf("NOME: %s\n", p->nome);
     printf("CPF: %s\n", p->cpf);
     printf("DATA DE NASCIMENTO: %s\n", p->dataNascimento);
     printf("TELEFONE: %s\n", p->telefone);
     printf("GENERO: %s\n", p->genero);
-    printf("#################### DADOS PESSOA #######################\n");
+    printf("NIVEL DE ACESSO: %d\n", p->nivelAcesso);
+    printf("USER: %s\n", p->user);
+    printf("SENHA: %s\n", p->senha);
+    printf("CRM: %s\n", p->CRM);
+    printf("DIABETES: %d\n", p->diabetes);
+    printf("FUMANTE: %d\n", p->fumante);
+    printf("ALERGIAS: %d\n", p->alergias);
+    printf("HISTORICO DE CANCER: %d\n", p->histCancer);
+    printf("TIPO DE PELE: %s\n", p->tipoPele);
+    printf("QNTD DE LESOES: %d\n", p->qntdLesoes);
+    printf("ATENDIDO: %d\n", p->atendido);
+    printf("LESOES:\n");
+    if(p->classeAtor == PACIENTE){
+        ImprimeVetorLesoes(p->lesoes, p->qntdLesoes);
+    }
 }
 
 int RetornaSomaTamanhoLesoesPessoa(tPessoa* pessoa){
@@ -336,4 +361,27 @@ void SetaPacienteParaAtendido(tPessoa* p){
 
 int RetornaAtendidoPaciente(tPessoa* p){
     return p->atendido;
+}
+
+void EscreveBinarioPessoa(FILE* arquivo, tPessoa* p){
+    fwrite(p, sizeof(tPessoa), 1, arquivo);
+}
+
+void EscreveBinarioLesoesPessoa(FILE* arquivo, tPessoa* p){
+    for(int i=0; i<p->qntdLesoes; i++){
+        EscreveBinarioLesao(arquivo, p->lesoes[i]);
+    }
+}
+
+void LeBinarioPessoa(FILE* arquivo, tPessoa* p){
+    fread(p, sizeof(tPessoa), 1, arquivo);
+}
+
+void LeBinarioPaciente(FILE* arquivo, tPessoa* p){
+    fread(p, sizeof(tPessoa), 1, arquivo);
+    p->lesoes = calloc(p->qntdLesoes, sizeof(tLesao*));
+    for(int i=0; i<p->qntdLesoes; i++){
+        p->lesoes[i] = CriaLesao(p->qntdLesoes);
+        LeBinarioLesao(arquivo, p->lesoes[i]);
+    }
 }

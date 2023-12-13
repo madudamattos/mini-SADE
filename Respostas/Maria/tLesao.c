@@ -92,3 +92,11 @@ void DesalocaLesoes(tLesao** lesoes, int qntdLesoes){
         free(lesoes);
     }
 }
+
+void EscreveBinarioLesao(FILE* arquivo, tLesao* lesao){
+    fwrite(lesao, sizeof(tLesao), 1, arquivo);
+}
+
+void LeBinarioLesao(FILE* arquivo, tLesao* lesao){
+    fread(lesao, sizeof(tLesao), 1, arquivo);
+}

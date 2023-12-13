@@ -29,4 +29,8 @@ void DesalocaLesao(tLesao *lesao);
 
 void DesalocaLesoes(tLesao** lesoes, int qntdLesoes);
 
+void EscreveBinarioLesao(FILE* arquivo, tLesao* lesao);
+
+void LeBinarioLesao(FILE* arquivo, tLesao* lesao);
+
 #endif
