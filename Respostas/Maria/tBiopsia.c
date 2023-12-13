@@ -7,12 +7,12 @@
 
 struct tBiopsia{
     char nomePaciente[100];
-    char CPF[15];
+    char CPF[20];
     tLesao **lesoes;
     int qntdLesoes;
     char nomeMedico[100];
-    char CRM[11];
-    char dataStr[13];
+    char CRM[20];
+    char dataStr[20];
 };
 
 tBiopsia *CriaBiopsia(char *nomePaciente, char *CPF,
@@ -80,7 +80,7 @@ void ImprimeNaTelaBiopsia(void *dado){
         }
     }
 
-    printf("%s (%s)\n", biopsia->nomeMedico, biopsia->CRM);
+    printf("\n%s (%s)\n", biopsia->nomeMedico, biopsia->CRM);
 
     printf("%s\n", biopsia->dataStr);
 
@@ -104,7 +104,7 @@ void ImprimeEmArquivoBiopsia(void *dado, char *path){
     if(dado != NULL){
         tBiopsia *biopsia = (tBiopsia *)dado;
         fprintf(pBiopsia, "PACIENTE: %s\n", biopsia->nomePaciente);
-        fprintf(pBiopsia, "NOME: %s\n\n", biopsia->nomePaciente);
+        fprintf(pBiopsia, "CPF: %s\n\n", biopsia->CPF);
         
         fprintf(pBiopsia, "SOLICITACAO DE BIOPSIA PARA AS LESOES:\n");
 
@@ -114,7 +114,7 @@ void ImprimeEmArquivoBiopsia(void *dado, char *path){
             }
         }
 
-        fprintf(pBiopsia, "%s (%s)\n", biopsia->nomeMedico, biopsia->CRM);
+        fprintf(pBiopsia, "\n%s (%s)\n", biopsia->nomeMedico, biopsia->CRM);
 
         fprintf(pBiopsia, "%s\n\n", biopsia->dataStr);
     }

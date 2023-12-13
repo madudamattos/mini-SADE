@@ -76,7 +76,7 @@ void ImprimeEmArquivoRelatorio(void *dado, char *path){
     if(dado != NULL){
         tRelatorio *Relatorio = (tRelatorio *) dado;
         fprintf(pRelatorio, "NUMERO TOTAL DE PACIENTES ATENDIDOS: %d\n", Relatorio->totalPacientes);
-        printf("IDADE MEDIA: %d\n", Relatorio->mediaIdade);
+        fprintf(pRelatorio, "IDADE MEDIA: %d\n", Relatorio->mediaIdade);
         fprintf(pRelatorio, "DISTRIBUICAO POR GENERO:\n");
         fprintf(pRelatorio, "- FEMININO: %d\n", Relatorio->totalFeminino);
         fprintf(pRelatorio, "- MASCULINO: %d\n", Relatorio->totalMasculino);

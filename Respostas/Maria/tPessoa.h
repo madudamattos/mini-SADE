@@ -87,4 +87,8 @@ char* RetornaGeneroPessoa(tPessoa* p);
 
 void AdicionaLesao(tLesao* lesao, tPessoa* p);
 
+void SetaPacienteParaAtendido(tPessoa* p);
+
+int RetornaAtendidoPaciente(tPessoa* p);
+
 #endif

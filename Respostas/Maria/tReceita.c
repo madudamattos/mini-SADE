@@ -11,8 +11,8 @@ struct tReceita{
     char instrucoes[MAX_TAM_INSTRUCOES];
     int qntd;
     char nomeMedico[100];
-    char CRM[11];
-    char dataStr[13];
+    char CRM[20];
+    char dataStr[20];
 };
 
 

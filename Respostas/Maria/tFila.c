@@ -61,7 +61,6 @@ void imprimeFila(tFila *f, char *path){
         imprimeEmArquivoDocumento(f->documentos[i], path);
     }
     
-    printf("PRESSIONE QUALQUER TECLA PARA VOLTAR PARA O MENU PRINCIPAL\n###########################################################\n");
+    printf("PRESSIONE QUALQUER TECLA PARA VOLTAR PARA O MENU ANTERIOR\n###########################################################\n");
 
-    scanf("%*c");
 }

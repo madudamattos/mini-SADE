@@ -12,7 +12,7 @@
 #include "tEncaminhamento.h"
 
 void RealizaConsulta(tSade* sade){
-    char dataConsulta[11], cpf[12], tipoPele[3];
+    char dataConsulta[20], cpf[20], tipoPele[10];
     int diabetes, fumante, alergia, histCancer;
 
     tPessoa* medico = RetornaUsuarioLogado(sade);
@@ -29,6 +29,7 @@ void RealizaConsulta(tSade* sade){
 
     if(paciente == NULL){
         printf("PACIENTE SEM CADASTRO\n\nPRESSIONE QUALQUER TECLA PARA VOLTAR PARA O MENU INICIAL\n############################################################\n");
+        scanf("%*c");
         return;
     }
 
@@ -54,6 +55,8 @@ void RealizaConsulta(tSade* sade){
     if(diabetes == 1) SetaPacienteParaDiabetico(paciente);
     if(histCancer == 1) SetaPacienteParaHistoricoCancer(paciente);
     SetaPacienteTipoPele(paciente, tipoPele);
+
+    SetaPacienteParaAtendido(paciente);
 
     printf("############################################################\n");
     
@@ -97,7 +100,7 @@ void CadastraLesao(tPessoa* paciente){
 }
 
 void GeraReceita(tSade* sade, tPessoa* paciente, tPessoa* medico, char* dataStr){
-    char nomeMedicamento[MAX_TAM_NOME_MEDICAMENTO], tipoMedicamento[MAX_TAM_NOME_MEDICAMENTO], instrucoes[MAX_TAM_INSTRUCOES], nomeMedico[100], CRM[11], Uso[10], nomePaciente[100];
+    char nomeMedicamento[MAX_TAM_NOME_MEDICAMENTO], tipoMedicamento[MAX_TAM_NOME_MEDICAMENTO], instrucoes[MAX_TAM_INSTRUCOES], nomeMedico[100], CRM[20], Uso[20], nomePaciente[100];
     eTipoUso tipoUso;
     int qtd;
 
@@ -109,7 +112,7 @@ void GeraReceita(tSade* sade, tPessoa* paciente, tPessoa* medico, char* dataStr)
     printf("NOME DO MEDICAMENTO: ");
     scanf("%[^\n]%*c", nomeMedicamento);
     printf("TIPO DE MEDICAMENTO: ");
-    scanf("%[^\n]%*c", nomeMedicamento);
+    scanf("%[^\n]%*c", tipoMedicamento);
     printf("QUANTIDADE: ");
     scanf("%d%*c", &qtd);
     printf("INSTRUÇÕES DE USO: ");
@@ -118,6 +121,23 @@ void GeraReceita(tSade* sade, tPessoa* paciente, tPessoa* medico, char* dataStr)
     if (strcmp(Uso, "ORAL") == 0) tipoUso = ORAL;
     else if (strcmp(Uso, "TOPICO") == 0) tipoUso = TOPICO;
     
+    //depuracao
+    // printf("\nCRIA RECEITA:\n");
+    // printf("NOME PACIENTE: %s\n", RetornaNomePessoa(paciente));
+    // printf("TIPO USO: %s\n", Uso);
+    // printf("NOME MEDICAMENTO: %s\n", nomeMedicamento);
+    // printf("TIPO MEDICAMENTO: %s\n", tipoMedicamento);
+    // printf("INSTRUCOES: %s\n", instrucoes);
+    // printf("QTD: %d\n", qtd);
+    // printf("NOME MEDICO: %s\n", RetornaNomePessoa(medico));
+    // printf("DATA: %s\n", dataStr);
+    // if(RetornaNivelAcessoPessoa(medico) == ADMIN){
+    //     printf("CRM: %s\n", "\0");
+    // }
+    // else{
+    //     printf("CRM: %s\n", RetornaCRMMedico(medico));
+    // }
+
     tReceita* receita = NULL;
 
     if(RetornaNivelAcessoPessoa(medico) == ADMIN){
@@ -142,6 +162,27 @@ void SolicitaBiopsia(tSade* sade, tPessoa* pessoa, tPessoa* medico, char* dataSt
     
     tBiopsia* biopsia = NULL;
 
+
+    //DEPURACAO
+    // printf("\nSOLICITA BIOPSIA:\n");
+    // printf("NOME PACIENTE: %s\n", RetornaNomePessoa(pessoa));
+    // printf("CPF: %s\n", RetornaCPFPessoa(pessoa));
+    // printf("NOME MEDICO: %s\n", RetornaNomePessoa(medico));
+    // printf("CRM: %s\n", RetornaCRMMedico(medico));
+    // printf("DATA: %s\n", dataStr);
+    // printf("QTD LESOES: %d\n", qtdLesoes);
+    // ImprimeVetorLesoes(lesoes, qtdLesoes);
+
+    // if(RetornaNivelAcessoPessoa(medico) == ADMIN){
+    //     printf("CRM: %s\n", "\0");
+    // }
+    // else{
+    //     printf("CRM: %s\n", RetornaCRMMedico(medico));
+    // }
+
+    // printf("\n");
+
+
     if(RetornaNivelAcessoPessoa(medico) == ADMIN){
         biopsia = CriaBiopsia(RetornaNomePessoa(pessoa), RetornaCPFPessoa(pessoa), lesoes, qtdLesoes, "\0", "\0", dataStr);
     }
@@ -157,7 +198,9 @@ void SolicitaBiopsia(tSade* sade, tPessoa* pessoa, tPessoa* medico, char* dataSt
     insereDocumentoFila(RetornaFilaSADE(sade), biopsia, ImprimeNaTelaBiopsia, ImprimeEmArquivoBiopsia, DesalocaBiopsia);
     
     printf("#################### CONSULTA MEDICA #######################\nSOLICITACAO DE BIOPSIA ENVIADA PARA FILA DE IMPRESSAO. PRESSIONE QUALQUER TECLA PARA RETORNAR AO MENU ANTERIOR\n############################################################\n");
-    
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+
     scanf("%*c");
 }
 
@@ -173,6 +216,23 @@ void GeraEncaminhamento(tSade* sade, tPessoa* paciente, tPessoa* medico, char* d
     scanf("%[^\n]%*c", motivo);
 
     tEncaminhamento* encaminhamento = NULL;
+
+    //DEPURACAO
+    // printf("GERA ENCAMINHAMENTO:\n");
+    // printf("NOME PACIENTE: %s\n", RetornaNomePessoa(paciente));
+    // printf("CPF: %s\n", RetornaCPFPessoa(paciente));
+    // printf("ESPECIALIDADE: %s\n", especialidade);
+    // printf("MOTIVO: %s\n", motivo);
+
+    // if(RetornaNivelAcessoPessoa(medico) == ADMIN){
+    //     printf("CRM: %s\n", "\0");
+    // }
+    // else{
+    //     printf("CRM: %s\n", RetornaCRMMedico(medico));
+    // }
+
+    // printf("DATA: %s\n", dataStr);
+    // printf("\n");
 
     if(RetornaNivelAcessoPessoa(medico) == ADMIN){
         encaminhamento = criaEncaminhamento(RetornaNomePessoa(paciente), RetornaCPFPessoa(paciente), especialidade, motivo, "\0", "\0", dataStr);

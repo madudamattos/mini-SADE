@@ -369,32 +369,41 @@ void ExibeRelatorioGeral(tSade* sade){
     int totalLesoes = 0;
     int totalCirurgias = 0;
     int totalCrioterapias = 0;
+    int totalPacientesAtendidos = 0;
     char *genero = (char*) calloc(10, sizeof(char));
 
     for(int i=0; i<sade->qtdPacientes; i++){
     
+        if(RetornaAtendidoPaciente(sade->pacientes[i]) == 1){
+            totalPacientesAtendidos++;
+
+            if(RetornaLesoesPaciente(sade->pacientes[i]) != NULL){
+                mediaTamLesoes += RetornaSomaTamanhoLesoesPessoa(sade->pacientes[i]);
+                totalLesoes += RetornaQtdLesoesPaciente(sade->pacientes[i]);
+                totalCirurgias += RetornaQtdLesoesParaCirurgia(sade->pacientes[i]);
+                totalCrioterapias += RetornaQtdLesoesParaCrioterapia(sade->pacientes[i]);
+            }
+        }
+        
         mediaIdade += RetornaIdadePessoa(sade->pacientes[i]);
-    
+
         genero = RetornaGeneroPessoa(sade->pacientes[i]);
 
         if(strcmp(genero, "FEMININO") == 0) totalFeminino++;
         else if(strcmp(genero, "MASCULINO") == 0) totalMasculino++;
         else totalOutros++;
-        if(RetornaLesoesPaciente(sade->pacientes[i]) != NULL){
-            mediaTamLesoes += RetornaSomaTamanhoLesoesPessoa(sade->pacientes[i]);
-            totalLesoes += RetornaQtdLesoesPaciente(sade->pacientes[i]);
-            totalCirurgias += RetornaQtdLesoesParaCirurgia(sade->pacientes[i]);
-            totalCrioterapias += RetornaQtdLesoesParaCrioterapia(sade->pacientes[i]);
-        }
     }
     
+    if(totalPacientesAtendidos != 0){
+        mediaTamLesoes = mediaTamLesoes / totalPacientesAtendidos;
+    }
+
     if(totalPacientes != 0){
         mediaIdade = mediaIdade / totalPacientes;
-        mediaTamLesoes = mediaTamLesoes / totalPacientes;
     }
     
     printf("i\n");
-    tRelatorio *relatorio = CriaRelatorio(totalPacientes, mediaIdade, totalFeminino, totalMasculino, totalOutros, mediaTamLesoes, totalLesoes, totalCirurgias, totalCrioterapias);
+    tRelatorio *relatorio = CriaRelatorio(totalPacientesAtendidos, mediaIdade, totalFeminino, totalMasculino, totalOutros, mediaTamLesoes, totalLesoes, totalCirurgias, totalCrioterapias);
 
     printf("#################### RELATORIO GERAL #######################\n");
     
@@ -411,25 +420,32 @@ void ExibeRelatorioGeral(tSade* sade){
         printf("#################### RELATORIO GERAL #######################\nRELATÓRIO ENVIADO PARA FILA DE IMPRESSAO. PRESSIONE QUALQUER TECLA PARA RETORNAR AO MENU ANTERIOR\n############################################################\n");
         scanf("%*c");
     }
+
+    free(genero);
     
     return;
 }
 
 void ExecutaFilaImpressao(tSade* sade, char *caminhoPastaSaida){
 
-    printf("################### FILA DE IMPRESSAO MEDICA #####################\nESCOLHA UMA OPCAO:\n\t(1) EXECUTAR FILA DE IMPRESSAO\n\t(2) RETORNAR AO MENU ANTERIOR\n############################################################\n");
-
     int opcao = 0;
+    int c;
 
-    scanf("%d", &opcao);
+    while(1){
+        MenuFilaImpressao();
+        scanf("%d", &opcao);
 
-    if(opcao == 1){
-        imprimeFila(sade->fila, caminhoPastaSaida);
+        if(opcao == 1){
+            imprimeFila(sade->fila, caminhoPastaSaida);
+            while(c=getchar() != '\n' && c != EOF);
+            scanf("%*c");
+        }
+        else if(opcao == 2){
+            break;
+        }
+
     }
-    else if(opcao == 2){
-        return;
-    }
-    
+
 }
 
 void SetaPrimeiroUsoSade(tSade* sade){

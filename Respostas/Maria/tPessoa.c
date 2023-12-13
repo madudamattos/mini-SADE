@@ -9,26 +9,24 @@ struct tPessoa{
     ATOR classeAtor;
     NIVELACESSO nivelAcesso;
     char nome[100];
-    char cpf[15];
-    char dataNascimento[13];
-    char telefone[15];
-    char genero[10];
+    char cpf[20];
+    char dataNascimento[20];
+    char telefone[20];
+    char genero[20];
     char user[20];
     char senha[20];
-    char CRM[11];
+    char CRM[20];
     int diabetes;
     int fumante;
     int alergias;
     int histCancer;
-    char tipoPele[4];
+    char tipoPele[10];
     int qntdLesoes;
+    int atendido;
     tLesao** lesoes;
 };
 
 tPessoa* CriaPessoa(){
-    // int c;
-    // while ((c = getchar()) != '\n' && c != EOF);
-
     tPessoa* p = (tPessoa*) calloc(1, sizeof(tPessoa));
 
     p->lesoes= NULL;
@@ -214,7 +212,7 @@ int RetornaIdadePessoa(tPessoa* p){
     // extrai dia, mês e ano da data de nascimento
     int diaNasc, mesNasc, anoNasc;
 
-    char* dataNascimento = "01/12/2002";
+    char* dataNascimento = p->dataNascimento;
 
     sscanf(dataNascimento, "%d/%d/%d", &diaNasc, &mesNasc, &anoNasc);
 
@@ -330,4 +328,12 @@ void AdicionaLesao(tLesao* lesao, tPessoa* p){
     p->lesoes[(p->qntdLesoes)-1] = lesao;
 
     printf("\nLESAO REGISTRADA COM SUCESSO. PRESSIONE QUALQUER TECLA PARA RETORNAR AO MENU ANTERIOR\n############################################################\n");
+}
+
+void SetaPacienteParaAtendido(tPessoa* p){
+    p->atendido = 1;
+}
+
+int RetornaAtendidoPaciente(tPessoa* p){
+    return p->atendido;
 }

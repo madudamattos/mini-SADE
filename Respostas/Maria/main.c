@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "tSade.h"
+#include "tPessoa.h"
 
 #define TAM_NOME_CAMINHO 300
 

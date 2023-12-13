@@ -7,12 +7,12 @@
 
 struct tEncaminhamento{
     char nomePaciente[100];
-    char CPF[15];
+    char CPF[20];
     char nomeEspecialidade[50];
     char motivo[300];
     char nomeMedico[100];
-    char CRM[11];
-    char dataStr[13];
+    char CRM[20];
+    char dataStr[20];
 };
 
 tEncaminhamento *criaEncaminhamento(char *nomePaciente, char* CPF, 
