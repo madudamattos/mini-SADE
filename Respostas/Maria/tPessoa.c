@@ -379,9 +379,11 @@ void LeBinarioPessoa(FILE* arquivo, tPessoa* p){
 
 void LeBinarioPaciente(FILE* arquivo, tPessoa* p){
     fread(p, sizeof(tPessoa), 1, arquivo);
+
     p->lesoes = calloc(p->qntdLesoes, sizeof(tLesao*));
+ 
     for(int i=0; i<p->qntdLesoes; i++){
-        p->lesoes[i] = CriaLesao(p->qntdLesoes);
+        p->lesoes[i] = AlocaLesao();
         LeBinarioLesao(arquivo, p->lesoes[i]);
     }
 }

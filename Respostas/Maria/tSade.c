@@ -41,13 +41,6 @@ tSade* CriaSADE(){
 }
 
 void InicializaSADE(tSade* sade, char* caminhoBancoDados){
-    //LE O BANCO DE DADOS ------------------------------------
-    printf("################################################\nDIGITE O CAMINHO DO BANCO DE DADOS:");
-    // lê o caminho do banco de dados
-    scanf("%[^\n]%*c", caminhoBancoDados);
-    //caminhoBancoDados = "/home/madudamattos/prog2/2_trabalho/Respostas/Maria/Banco";
-
-    printf("################################################\n");
 
     // Lista dos arquivos do banco de dados
     char* arquivos[] = {"secretarios.bin", "medicos.bin", "pacientes.bin", "consultas.bin", "lesoes.bin", "fila_impressao.bin"};
@@ -70,7 +63,7 @@ void InicializaSADE(tSade* sade, char* caminhoBancoDados){
             sade->primeiroUso = 1;
         }
     }
-    //printf("primeiro uso: %d\n", sade->primeiroUso);
+    printf("primeiro uso: %d\n", sade->primeiroUso);
 
     if(sade->primeiroUso == 1){
         
@@ -78,13 +71,17 @@ void InicializaSADE(tSade* sade, char* caminhoBancoDados){
     }
     else{
         //le os arquivos binarios caso nao seja o primeiro uso
+        printf("1\n");
         LeBinarioPacientes(sade, caminhoBancoDados);
 
+        printf("2\n");
         //LeBinarioLesoes(sade, caminhoBancoDados);
 
         LeBinarioSecretarios(sade, caminhoBancoDados);
 
+        printf("3\n");
         LeBinarioMedicos(sade, caminhoBancoDados);
+        printf("4\n");
 
         //LeBinarioConsulta(sade, caminhoBancoDados);
     }
@@ -104,23 +101,30 @@ void ExecutaSADE(tSade* sade, char *caminhoPastaSaida){
     char c;
     NIVELACESSO acesso;
     
-    // printf("imprime SADE:\n");
-    // printf("qtdPacientes: %d\n", sade->qtdPacientes);
-    // printf("qtdMedicos: %d\n", sade->qtdMedicos);
-    // printf("qtdSecretarios: %d\n", sade->qtdSecretarios);
-    //printf("primeiroUso: %d\n", sade->primeiroUso);
+    printf("\nimprime SADE:------------------------\n");
+    printf("qtdPacientes: %d\n", sade->qtdPacientes);
+    printf("qtdMedicos: %d\n", sade->qtdMedicos);
+    printf("qtdSecretarios: %d\n", sade->qtdSecretarios);
+    printf("primeiroUso: %d\n", sade->primeiroUso);
 
-    // printf("vetores sade:\n");
+    printf("vetores sade:\n");
 
-    // for(int i=0 ; i<sade->qtdPacientes; i++){
-    //     printf("--- paciente %d:\n", i);
-    //     ImprimePessoa(sade->pacientes[i]);
-    // }
+    for(int i=0 ; i<sade->qtdPacientes; i++){
+        printf("--- paciente %d:\n", i);
+        ImprimePessoa(sade->pacientes[i]);
+    }
 
-    // for(int i=0 ; i<sade->qtdMedicos; i++){
-    //     printf("--- medico %d:\n", i);
-    //     ImprimePessoa(sade->medicos[i]);
-    // }
+    for(int i=0 ; i<sade->qtdSecretarios; i++){
+        printf("--- secretario %d:\n", i);
+        ImprimePessoa(sade->secretarios[i]);
+    }
+
+    for(int i=0 ; i<sade->qtdMedicos; i++){
+        printf("--- medico %d:\n", i);
+        ImprimePessoa(sade->medicos[i]);
+    }
+
+    printf("INICIA PROGRAMA ------------------------:\n\n");
 
     //EM CASO DE PRIMEIRO USO CADASTRA SECRETARIO
     if(sade->primeiroUso == 1){
@@ -161,7 +165,7 @@ void ExecutaSADE(tSade* sade, char *caminhoPastaSaida){
     
     case USER:
         while(opcao != 8){
-            while(c=getchar() != '\n' && c != EOF);
+            //while(c=getchar() != '\n' && c != EOF);
             MenuPrincipalUser();
 
             scanf("%d", &opcao);
@@ -202,11 +206,12 @@ void ExecutaSADE(tSade* sade, char *caminhoPastaSaida){
 
 void FinalizaSADE(tSade* sade, char *caminhoBancoDados){
 
-    printf(" caminho banco: %s\n", caminhoBancoDados);
+    //printf(" caminho banco: %s\n", caminhoBancoDados);
     // passa as informações todas pros arquivos
+    
     EscreveBinarioPacientes(sade, caminhoBancoDados);
 
-    //EscreveBinarioLesoes(sade, caminhoBancoDados);
+    // //EscreveBinarioLesoes(sade, caminhoBancoDados);
 
     EscreveBinarioSecretarios(sade, caminhoBancoDados);
 
@@ -309,6 +314,8 @@ tPessoa* LocalizaMedicoCPF(tSade* sade, char cpf[]){
 }
 
 void AddSecretarioSADE(tSade* sade){
+    int c;
+    while(c=getchar() != '\n' && c != EOF);
     sade->qtdSecretarios++;
     
     sade->secretarios = realloc(sade->secretarios, sizeof(tPessoa *) * sade->qtdSecretarios);
@@ -507,9 +514,9 @@ void EscreveBinarioPacientes(tSade* sade, char* caminhoBancoDados){
     char caminhoArquivo[TAM_NOME_CAMINHO + 1];
     sprintf(caminhoArquivo, "%s/pacientes.bin", caminhoBancoDados);
     
-    printf("caminho arquivo: %s\n", caminhoArquivo);
+    //printf("caminho arquivo pacientes: %s\n", caminhoArquivo);
 
-    FILE *pArquivo = fopen(caminhoArquivo, "ab");
+    FILE *pArquivo = fopen(caminhoArquivo, "wb");
 
     if (pArquivo == NULL) {
         printf("Erro ao escrever arquivo binario pacientes\n");
@@ -552,7 +559,7 @@ void EscreveBinarioSecretarios(tSade* sade, char* caminhoBancoDados){
     
     FILE *pArquivo = fopen(caminhoArquivo, "wb");
 
-    printf("caminho arquivo: %s\n", caminhoArquivo);
+    //printf("caminho arquivo: %s\n", caminhoArquivo);
     
     if (pArquivo == NULL) {
         printf("Erro ao escrever arquivo binario secretario\n");
@@ -583,7 +590,7 @@ void EscreveBinarioMedicos(tSade* sade, char* caminhoBancoDados){
     fwrite(&sade->qtdMedicos, sizeof(int), 1, pArquivo);
 
     for(int i=0; i<sade->qtdMedicos; i++){
-        tPessoa *medico = sade->secretarios[i];
+        tPessoa *medico = sade->medicos[i];
         EscreveBinarioPessoa(pArquivo, medico);
     }
 
@@ -600,7 +607,8 @@ void LeBinarioPacientes(tSade* sade, char* caminhoBancoDados){
         printf("Erro ao abrir arquivo binario pacientes\n");
         return;
     }
-    
+    //printf("camino arquivo pacientes: %s\n", caminhoArquivo);
+
     fread(&sade->qtdPacientes, sizeof(int), 1, pArquivo);
 
     sade->pacientes = calloc(sade->qtdPacientes, sizeof(tPessoa*) * sade->qtdPacientes);
@@ -611,12 +619,21 @@ void LeBinarioPacientes(tSade* sade, char* caminhoBancoDados){
         sade->pacientes[i] = paciente; 
     }
 
+    //imprime pacientes
+    // printf("SADE qtd pacientes: %d\n", sade->qtdPacientes);
+    // for(int i=0; i<sade->qtdPacientes; i++){
+    //     printf("paciente %d:\n", i);
+    //     ImprimePessoa(sade->pacientes[i]);
+    // }
+
     fclose(pArquivo);
 }
 
 void LeBinarioSecretarios(tSade* sade, char* caminhoBancoDados){
     char caminhoArquivo[TAM_NOME_CAMINHO + 1];
     sprintf(caminhoArquivo, "%s/secretarios.bin", caminhoBancoDados);
+
+    //printf("caminho arquivo secretario: %s\n", caminhoArquivo);
     
     FILE *pArquivo = fopen(caminhoArquivo, "rb");
     
@@ -627,11 +644,20 @@ void LeBinarioSecretarios(tSade* sade, char* caminhoBancoDados){
 
     fread(&sade->qtdSecretarios, sizeof(int), 1, pArquivo);
 
+    sade->secretarios = calloc(sade->qtdSecretarios, sizeof(tPessoa*) * sade->qtdSecretarios);
+    
     for(int i=0; i<sade->qtdSecretarios; i++){
         tPessoa *secretario = CriaPessoa();
         LeBinarioPessoa(pArquivo, secretario);
         sade->secretarios[i] = secretario;
     }
+
+    //imprime secretarios
+    // printf("SADE qtd secretarios: %d\n", sade->qtdSecretarios);
+    // for(int i=0; i<sade->qtdSecretarios; i++){
+    //     printf("secretario %d:\n", i);
+    //     ImprimePessoa(sade->secretarios[i]);
+    // }
 
     fclose(pArquivo);
 }
@@ -649,9 +675,11 @@ void LeBinarioMedicos(tSade* sade, char* caminhoBancoDados){
 
     fread(&sade->qtdMedicos, sizeof(int), 1, pArquivo);
 
+    sade->medicos = calloc(sade->qtdMedicos, sizeof(tPessoa*) * sade->qtdMedicos);
+
     for(int i=0; i<sade->qtdMedicos; i++){
         tPessoa *medico = CriaPessoa();
-        EscreveBinarioPessoa(pArquivo, medico);
+        LeBinarioPessoa(pArquivo, medico);
         sade->medicos[i] = medico;
     }
 

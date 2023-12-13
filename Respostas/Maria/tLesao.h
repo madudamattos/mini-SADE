@@ -7,6 +7,8 @@
 
 typedef struct tLesao tLesao;
 
+tLesao* AlocaLesao();
+
 tLesao* CriaLesao(int qtdLesoes);
 
 void ImprimeLesao(tLesao* lesao);

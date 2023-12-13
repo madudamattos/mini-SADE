@@ -12,8 +12,13 @@ struct tLesao{
     int crioterapia;
 };
 
-tLesao* CriaLesao(int qtdLesoes){
+tLesao* AlocaLesao(){
     tLesao *lesao = (tLesao *)calloc(1, sizeof(tLesao));
+    return lesao;
+}
+
+tLesao* CriaLesao(int qtdLesoes){
+    tLesao *lesao = AlocaLesao();
 
     printf("#################### CONSULTA MEDICA #######################\nCADASTRO DE LESAO: \nDIAGNOSTICO CLINICO: ");
     scanf("%[^\n]%*c", lesao->diagnostico);
