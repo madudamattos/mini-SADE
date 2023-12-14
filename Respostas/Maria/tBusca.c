@@ -17,7 +17,7 @@ tBusca* criaListaBusca(tPessoa** pessoasEncontradas, int qtdPessoasEncontradas){
 
     for(int i=0; i<qtdPessoasEncontradas; i++){
         printf("qtdPessoasEncontradas: %d\n", qtdPessoasEncontradas);
-        busca->pacientesEncontrados[i] = ClonaPessoa(pessoasEncontradas[i]);
+        busca->pacientesEncontrados[i] = pessoasEncontradas[i];
     
     }
     busca->qtdPacientesEncontrados = qtdPessoasEncontradas;
@@ -28,9 +28,6 @@ tBusca* criaListaBusca(tPessoa** pessoasEncontradas, int qtdPessoasEncontradas){
 void desalocaBusca(void *dado){
     if(dado != NULL){
         tBusca *busca = (tBusca *)dado;
-        for(int i=0; i<busca->qtdPacientesEncontrados; i++){
-            DesalocaPessoa(busca->pacientesEncontrados[i]);
-        }
         free(busca->pacientesEncontrados);
         free(busca);
     }

@@ -299,11 +299,23 @@ tPessoa* LocalizaSecretarioCPF(tSade* sade, char cpf[]){
         }
     }
 
+    for(int i=0; i<sade->qtdMedicos; i++){
+        if(strcmp(RetornaCPFPessoa(sade->medicos[i]), cpf) == 0){
+            return sade->medicos[i];
+        }
+    }
+
     return NULL;
 }
 
 tPessoa* LocalizaMedicoCPF(tSade* sade, char cpf[]){
-   
+    
+    for(int i=0; i<sade->qtdSecretarios; i++){
+        if(strcmp(RetornaCPFPessoa(sade->secretarios[i]), cpf) == 0){
+            return sade->secretarios[i];
+        }
+    }
+
     for(int i=0; i<sade->qtdMedicos; i++){
         if(strcmp(RetornaCPFPessoa(sade->medicos[i]), cpf) == 0){
             return sade->medicos[i];
@@ -316,11 +328,24 @@ tPessoa* LocalizaMedicoCPF(tSade* sade, char cpf[]){
 void AddSecretarioSADE(tSade* sade){
     int c;
     while(c=getchar() != '\n' && c != EOF);
+    
+    tPessoa* secretario = CadastraSecretario();
+
+    char* cpf = RetornaCPFPessoa(secretario);
+
+    if(LocalizaSecretarioCPF(sade, cpf) != NULL){
+        printf("CPF JA EXISTENTE. OPERACAO NAO PERMITIDA.\n");
+        DesalocaPessoa(secretario);
+        return;
+    }
+    
     sade->qtdSecretarios++;
     
     sade->secretarios = realloc(sade->secretarios, sizeof(tPessoa *) * sade->qtdSecretarios);
     
-    sade->secretarios[sade->qtdSecretarios-1] = CadastraSecretario();
+    sade->secretarios[sade->qtdSecretarios-1] = secretario;
+    
+    CadastroRealizado();
 
     scanf("%*c");
 }
@@ -329,22 +354,50 @@ void AddMedicoSADE(tSade* sade){
     int c;
     while(c=getchar() != '\n' && c != EOF);
 
+    tPessoa * medico = CadastraMedico();
+
+    char *cpf = RetornaCPFPessoa(medico);
+
+    if(LocalizaMedicoCPF(sade, cpf) != NULL){
+        printf("CPF JA EXISTENTE. OPERACAO NAO PERMITIDA.\n");
+        DesalocaPessoa(medico);
+        return;
+    }
+
     sade->qtdMedicos++;
 
     sade->medicos = realloc(sade->medicos, sizeof(tPessoa *) * sade->qtdMedicos);
 
-    sade->medicos[sade->qtdMedicos-1] = CadastraMedico();
+    sade->medicos[sade->qtdMedicos-1] = medico;
+
+    CadastroRealizado();
+
+    scanf("%*c");
 }
 
 void AddPacienteSADE(tSade* sade){
     int c;
     while(c=getchar() != '\n' && c != EOF);
 
+    tPessoa *paciente = CadastraPaciente();
+
+    char* cpf = RetornaCPFPessoa(paciente);
+
+    if(LocalizaPacienteCPF(sade, cpf) != NULL){
+        printf("CPF JA EXISTENTE. OPERACAO NAO PERMITIDA.\n");
+        DesalocaPessoa(paciente);
+        return;
+    }
+
     sade->qtdPacientes++;
 
     sade->pacientes = realloc(sade->pacientes, sizeof(tPessoa *) * sade->qtdPacientes);
 
-    sade->pacientes[sade->qtdPacientes-1] = CadastraPaciente();
+    sade->pacientes[sade->qtdPacientes-1] = paciente;
+
+    CadastroRealizado();
+
+    scanf("%*c");
 } 
 
 void BuscaPacientes(tSade* sade){

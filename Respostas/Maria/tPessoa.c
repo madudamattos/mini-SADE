@@ -89,8 +89,6 @@ tPessoa* CadastraSecretario(){
     printf("NIVEL DE ACESSO: ");
     scanf("%[^\n]%*c", acesso);
     secretario->nivelAcesso = ConverteStringNivelAcesso(acesso);
-    
-    CadastroRealizado();
 
     return secretario;
 }
@@ -110,10 +108,6 @@ tPessoa* CadastraMedico(){
     printf("SENHA: ");
     scanf("%[^\n]%*c", medico->senha);
 
-    CadastroRealizado();
-
-    scanf("%*c");
-
     return medico;
 }
 
@@ -123,10 +117,6 @@ tPessoa* CadastraPaciente(){
     tPessoa* paciente = CadastraPessoa();
 
     paciente->classeAtor = PACIENTE;
-
-    CadastroRealizado();
-
-    scanf("%*c");
 
     return paciente;
 }
